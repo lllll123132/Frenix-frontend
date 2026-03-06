@@ -96,7 +96,7 @@ export async function createGatewayKey(params: {
 
     if (!res.ok) {
         // 409 = user already has a key
-        throw Object.assign(new Error(body.message || `HTTP ${res.status}`), { status: res.status });
+        throw Object.assign(new Error(body.message || `HTTP ${res.status}`), { status: res.status, body });
     }
 
     return body;

@@ -106,7 +106,7 @@ export default function ApiKeys() {
                     toast.success('Your API Key has been generated automatically!');
                 } else if (createRes.status === 409) {
                     setHasKey(true);
-                    setKey({ plainKey: '', keyPrefix: data.keyPrefix || '???', tier: data.tier || 'free', email: user?.email || '', createdNow: false });
+                    setKey({ plainKey: '', keyPrefix: data.keyPrefix || '', tier: data.tier || 'free', email: data.email || user?.email || '', createdNow: false });
                 } else {
                     setError(data.error || 'Failed to create key');
                     setHasKey(false);
