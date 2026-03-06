@@ -25,17 +25,26 @@ export async function GET() {
 
         return NextResponse.json(stats);
     } catch (err: any) {
-        // If the cookie was invalid, clear it
-        if (keyCookie?.value && (err.message.includes('401') || err.message.includes('Invalid API key'))) {
+        const msg = err.message || '';
+
+        if (keyCookie?.value && (msg.includes('401') || msg.includes('Invalid API key'))) {
             cookieStore.delete('frenix_gateway_key');
+
+            try {
+                const emailStats = await import('@/lib/gateway').then(m => m.fetchStatsByEmail(user.email!));
+                return NextResponse.json(emailStats);
+            } catch {
+                return NextResponse.json({ error: 'NO_KEY' }, { status: 404 });
+            }
         }
 
-        // If even email lookup failed or return 404, say NO_KEY
-        const msg = err.message || '';
-        if (msg.includes('404') || msg.toLowerCase().includes('not found') || msg.toLowerCase().includes('no api key')) {
+        if (msg.includes('404') || msg.includes('401') || msg.includes('403')
+            || msg.toLowerCase().includes('not found')
+            || msg.toLowerCase().includes('no api key')
+            || msg.toLowerCase().includes('missing api key')) {
             return NextResponse.json({ error: 'NO_KEY' }, { status: 404 });
         }
 
-        return NextResponse.json({ error: err.message }, { status: 500 });
+        return NextResponse.json({ error: 'NO_KEY' }, { status: 404 });
     }
 }

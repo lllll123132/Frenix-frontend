@@ -95,6 +95,30 @@ export default function ApiKeys() {
     useEffect(() => {
         if (status !== 'authenticated') return;
 
+        const autoCreate = async () => {
+            setCreating(true);
+            try {
+                const createRes = await fetch('/api/gateway/keys', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) });
+                const data = await createRes.json();
+                if (createRes.ok) {
+                    setKey({ plainKey: data.key, keyPrefix: data.key.substring(0, 20), tier: data.tier, email: data.email || user?.email || '', createdNow: true });
+                    setHasKey(true);
+                    toast.success('Your API Key has been generated automatically!');
+                } else if (createRes.status === 409) {
+                    setHasKey(true);
+                    setKey({ plainKey: '', keyPrefix: data.keyPrefix || '???', tier: data.tier || 'free', email: user?.email || '', createdNow: false });
+                } else {
+                    setError(data.error || 'Failed to create key');
+                    setHasKey(false);
+                }
+            } catch {
+                setError('Could not connect to gateway.');
+                setHasKey(false);
+            } finally {
+                setCreating(false);
+            }
+        };
+
         const loadOrCreate = async () => {
             try {
                 const r = await fetch('/api/gateway/stats');
@@ -104,27 +128,9 @@ export default function ApiKeys() {
                     setHasKey(true);
                     return;
                 }
+            } catch {}
 
-                if (r.status === 404) {
-                    setCreating(true);
-                    const createRes = await fetch('/api/gateway/keys', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) });
-                    const data = await createRes.json();
-                    if (createRes.ok) {
-                        setKey({ plainKey: data.key, keyPrefix: data.key.substring(0, 20), tier: data.tier, email: data.email || user?.email || '', createdNow: true });
-                        setHasKey(true);
-                        toast.success('Your API Key has been generated automatically!');
-                    } else {
-                        setError(data.error || 'Failed to create key');
-                        setHasKey(false);
-                    }
-                    setCreating(false);
-                    return;
-                }
-
-                setHasKey(false);
-            } catch {
-                setHasKey(false);
-            }
+            await autoCreate();
         };
 
         loadOrCreate();
