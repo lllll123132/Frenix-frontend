@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
 
         return NextResponse.json(result, { status: 201 });
     } catch (err: any) {
-        const status = err.status === 409 ? 409 : 500;
+        const status = typeof err.status === 'number' ? err.status : 500;
         return NextResponse.json({ error: err.message }, { status });
     }
 }
