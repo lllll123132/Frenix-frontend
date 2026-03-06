@@ -11,6 +11,7 @@ export interface GatewayStats {
     email: string | null;
     tier: string;
     keyPrefix: string;
+    plainKey?: string;
     status: string;
     createdAt: string;
     lastUsedAt: string | null;
@@ -49,6 +50,21 @@ export interface CreateKeyResult {
 export async function fetchStats(apiKey: string): Promise<GatewayStats> {
     const res = await fetch(`${BASE}/v1/keys/stats`, {
         headers: { Authorization: `Bearer ${apiKey}` },
+        cache: 'no-store',
+    });
+
+    if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.message || `HTTP ${res.status}`);
+    }
+
+    return res.json();
+}
+
+// ─── Fetch key info by email (Dashboard fallback) ───────────────────────────
+
+export async function fetchStatsByEmail(email: string): Promise<GatewayStats> {
+    const res = await fetch(`${BASE}/v1/keys/email/${encodeURIComponent(email)}`, {
         cache: 'no-store',
     });
 

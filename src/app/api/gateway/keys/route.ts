@@ -1,29 +1,30 @@
-import { getServerSession } from 'next-auth/next';
+import { createClient } from '@/lib/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { createGatewayKey } from '@/lib/gateway';
 
 export async function POST(req: NextRequest) {
-    const session = await getServerSession(authOptions);
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const email = session.user.email;
+    const sessionUser = {
+        email: user.email,
+        name: user.user_metadata?.full_name || user.user_metadata?.name || user.email.split('@')[0],
+    };
 
-    // Check if cookie exists
+    const email = sessionUser.email;
+
     const cookieStore = await cookies();
-    if (cookieStore.has('frenix_gateway_key')) {
-        return NextResponse.json({ error: 'You already have a key.' }, { status: 409 });
-    }
 
     const body = await req.json().catch(() => ({}));
 
     try {
         const result = await createGatewayKey({
             email,
-            name: session.user.name?.split(' ')[0] || undefined,
-            lastName: session.user.name?.split(' ').slice(1).join(' ') || undefined,
-            username: (session.user as any).login || undefined,
+            name: sessionUser.name?.split(' ')[0] || undefined,
+            lastName: sessionUser.name?.split(' ').slice(1).join(' ') || undefined,
+            username: user.user_metadata?.user_name || undefined,
             ...body,
         });
 

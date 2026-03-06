@@ -1,10 +1,11 @@
 'use client'
 
-import { useSession } from 'next-auth/react';
-import { redirect } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
+import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
+import { Key, AlertTriangle, Sparkles, Copy, Check } from 'lucide-react';
 
 interface StoredKey {
     plainKey: string;   // only present right after creation
@@ -60,16 +61,31 @@ function CopyBtn({ text }: { text: string }) {
             }}
             style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: copied ? '#059669' : 'var(--text-muted)', fontSize: '13px', padding: '4px 8px', borderRadius: '6px', transition: 'color 0.2s', fontFamily: 'Outfit, sans-serif', fontWeight: 600 }}
         >
-            {copied ? '✓ Copied' : '⎘ Copy'}
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                {copied ? <><Check size={13} /> Copied</> : <><Copy size={13} /> Copy</>}
+            </span>
         </button>
     );
 }
 
 export default function ApiKeys() {
-    const { data: session, status } = useSession({
-        required: true,
-        onUnauthenticated() { redirect('/signin'); },
-    });
+    const router = useRouter();
+    const [user, setUser] = useState<any>(null);
+    const [status, setStatus] = useState<'loading' | 'authenticated'>('loading');
+    const supabase = createClient();
+
+    useEffect(() => {
+        const checkUser = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) {
+                router.push('/signin');
+                return;
+            }
+            setUser(user);
+            setStatus('authenticated');
+        };
+        checkUser();
+    }, []);
 
     const [key, setKey] = useState<StoredKey | null>(null);
     const [creating, setCreating] = useState(false);
@@ -87,7 +103,7 @@ export default function ApiKeys() {
             })
             .then(data => {
                 if (data) {
-                    setKey({ plainKey: '', keyPrefix: data.keyPrefix, tier: data.tier, email: data.email || '', createdNow: false });
+                    setKey({ plainKey: data.plainKey || '', keyPrefix: data.keyPrefix, tier: data.tier, email: data.email || '', createdNow: false });
                 }
             })
             .catch(() => setHasKey(false));
@@ -105,7 +121,7 @@ export default function ApiKeys() {
                 toast.error(msg);
                 return;
             }
-            setKey({ plainKey: data.key, keyPrefix: data.key.substring(0, 20), tier: data.tier, email: data.email || session?.user?.email || '', createdNow: true });
+            setKey({ plainKey: data.key, keyPrefix: data.key.substring(0, 20), tier: data.tier, email: data.email || user?.email || '', createdNow: true });
             setHasKey(true);
             toast.success('Your API Key has been generated successfully!');
         } catch {
@@ -134,7 +150,7 @@ export default function ApiKeys() {
                     </div>
                     {!hasKey && (
                         <button className="btn-primary" style={{ padding: '10px 22px', fontSize: '14px' }} onClick={handleCreate} disabled={creating}>
-                            {creating ? '⏳ Creating…' : '+ Generate My Key'}
+                            {creating ? 'Creating...' : 'Generate key'}
                         </button>
                     )}
                 </div>
@@ -142,7 +158,7 @@ export default function ApiKeys() {
 
             {error && (
                 <div className="alert alert-error" style={{ marginBottom: '24px' }}>
-                    <span style={{ fontSize: '18px' }}>⚠️</span>
+                    <AlertTriangle size={18} style={{ flexShrink: 0, marginTop: '2px' }} />
                     <div>{error}</div>
                 </div>
             )}
@@ -152,7 +168,7 @@ export default function ApiKeys() {
                 <div className="glass-card animate-fade-2" style={{ padding: '32px', marginBottom: '28px' }}>
                     {key.createdNow && (
                         <div className="alert alert-success" style={{ marginBottom: '24px' }}>
-                            <span style={{ fontSize: '20px' }}>🎉</span>
+                            <Sparkles size={20} style={{ flexShrink: 0, marginTop: '2px' }} />
                             <div>
                                 <strong>Key created!</strong> Copy it now — it will <strong>never be shown again</strong>.
                             </div>
@@ -174,10 +190,10 @@ export default function ApiKeys() {
                                 <td style={{ fontWeight: '600' }}>My Gateway Key</td>
                                 <td>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                        <code style={{ background: 'var(--bg-soft)', padding: '6px 12px', borderRadius: '8px', fontSize: '13px', color: key.createdNow ? 'var(--primary)' : 'var(--text-muted)', letterSpacing: '0.5px', border: '1px solid var(--border)', maxWidth: '340px', overflowX: 'auto', display: 'block', fontWeight: key.createdNow ? '700' : 'normal' }}>
-                                            {key.createdNow ? key.plainKey : `${key.keyPrefix}••••••••••••••••••••`}
+                                        <code style={{ background: 'var(--bg-soft)', padding: '6px 12px', borderRadius: '8px', fontSize: '13px', color: 'var(--text-main)', fontFamily: 'ui-monospace, monospace', letterSpacing: '0.3px', border: '1px solid var(--border)', maxWidth: '340px', overflowX: 'auto', display: 'block', fontWeight: key.plainKey ? '600' : 'normal' }}>
+                                            {key.plainKey ? key.plainKey : `${key.keyPrefix}••••••••••••••••••••`}
                                         </code>
-                                        {key.createdNow && <CopyBtn text={key.plainKey} />}
+                                        {key.plainKey && <CopyBtn text={key.plainKey} />}
                                     </div>
                                 </td>
                                 <td><span className={`badge ${key.tier === 'pro' ? 'badge-warning' : 'badge-success'}`}>{key.tier}</span></td>
@@ -193,13 +209,13 @@ export default function ApiKeys() {
                 </div>
             ) : (
                 <div className="glass-card animate-fade-2" style={{ padding: '48px', textAlign: 'center', marginBottom: '28px' }}>
-                    <div style={{ fontSize: '48px', marginBottom: '16px' }}>🔑</div>
+                    <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'center' }}><Key size={40} color="var(--text-muted)" strokeWidth={1.5} /></div>
                     <h3 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '8px' }}>No API Key Yet</h3>
                     <p style={{ color: 'var(--text-muted)', fontSize: '14px', maxWidth: '400px', margin: '0 auto 28px', lineHeight: '1.6' }}>
                         Generate your free key to start calling the Frenix AI Gateway. One key per account.
                     </p>
                     <button className="btn-primary" style={{ margin: '0 auto', padding: '12px 36px', fontSize: '15px' }} onClick={handleCreate} disabled={creating}>
-                        {creating ? '⏳ Creating…' : 'Generate Free Key'}
+                        {creating ? 'Creating...' : 'Generate free key'}
                     </button>
                 </div>
             )}
@@ -212,7 +228,7 @@ export default function ApiKeys() {
                         Pass your key as a Bearer token to any endpoint.
                     </p>
                     <div className="code-block">
-                        <div><span style={{ color: 'var(--secondary)' }}>POST</span> {process.env.NEXT_PUBLIC_GATEWAY_URL || 'http://localhost:4000'}/v1/chat/completions</div>
+                        <div><span style={{ color: '#60a5fa' }}>POST</span> {process.env.NEXT_PUBLIC_GATEWAY_URL || 'http://localhost:4000'}/v1/chat/completions</div>
                         <div style={{ color: '#475569' }}>Authorization: Bearer sk-frenix-…</div>
                     </div>
                 </div>

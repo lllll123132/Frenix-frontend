@@ -1,6 +1,6 @@
 'use client'
 
-import { signIn } from 'next-auth/react';
+import { createClient } from '@/lib/supabase/client';
 import { useState } from 'react';
 import Link from 'next/link';
 import { Label } from '@/components/ui/label';
@@ -8,16 +8,27 @@ import { Label } from '@/components/ui/label';
 export default function SignInPage() {
     const [loading, setLoading] = useState(false);
     const [agreed, setAgreed] = useState(false);
+    const supabase = createClient();
 
     const handleGithub = async () => {
         if (!agreed) return;
         setLoading(true);
-        await signIn('github', { callbackUrl: '/oauth/github' });
+        const { error } = await supabase.auth.signInWithOAuth({
+            provider: 'github',
+            options: {
+                redirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
+            },
+        });
+
+        if (error) {
+            console.error('Login error:', error.message);
+            setLoading(false);
+        }
     };
 
     return (
         <div style={{
-            minHeight: '100vh',
+            minHeight: '100dvh',
             background: 'var(--bg)',
             display: 'flex',
             alignItems: 'center',
@@ -25,9 +36,7 @@ export default function SignInPage() {
             padding: '24px',
             transition: 'background-color 0.3s ease'
         }}>
-            {/* Ambient blobs */}
-            <div aria-hidden style={{ position: 'fixed', top: '-30%', left: '-10%', width: '600px', height: '600px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(91,192,235,0.12), transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
-            <div aria-hidden style={{ position: 'fixed', bottom: '-20%', right: '-10%', width: '500px', height: '500px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(33,181,165,0.10), transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
+            {/* (no ambient decoration) */}
 
             <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '420px' }}>
                 {/* Card */}
@@ -70,7 +79,7 @@ export default function SignInPage() {
                             }}
                         />
                         <Label htmlFor="terms-agreed" style={{ fontSize: '13px', lineHeight: '1.5', color: 'var(--text-muted)' }}>
-                            I agree to the <Link href="/terms" style={{ color: 'var(--primary)', fontWeight: '600' }}>Terms of Service</Link>, <Link href="/privacy" style={{ color: 'var(--primary)', fontWeight: '600' }}>Privacy Policy</Link>, and <Link href="/refund" style={{ color: 'var(--primary)', fontWeight: '600' }}>Refund Policy</Link>.
+                            I agree to the <Link href="/terms" style={{ color: 'var(--text-main)', fontWeight: '600', textDecoration: 'underline', textUnderlineOffset: '2px' }}>Terms of Service</Link>, <Link href="/privacy" style={{ color: 'var(--text-main)', fontWeight: '600', textDecoration: 'underline', textUnderlineOffset: '2px' }}>Privacy Policy</Link>, and <Link href="/refund" style={{ color: 'var(--text-main)', fontWeight: '600', textDecoration: 'underline', textUnderlineOffset: '2px' }}>Refund Policy</Link>.
                         </Label>
                     </div>
 
