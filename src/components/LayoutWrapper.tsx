@@ -43,7 +43,6 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
 
     const navLinks = [
         { label: 'Dashboard', href: '/dashboard' },
-        { label: 'Docs', href: '/docs' },
         { label: 'Pricing', href: '/#pricing' },
     ];
 

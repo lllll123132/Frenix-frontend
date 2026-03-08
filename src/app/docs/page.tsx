@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Copy, Check, ChevronRight, ExternalLink, Zap, Shield, Key, Globe, Image, Mic, Brain, AlertTriangle, Layers } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
 
 const GATEWAY = process.env.NEXT_PUBLIC_GATEWAY_URL || 'https://api.frenix.io';
 
@@ -114,8 +115,8 @@ export default function DocsPage() {
     <div className="max-w-7xl mx-auto px-6 py-10 lg:py-16">
       <div className="flex flex-col lg:grid lg:grid-cols-[240px,1fr] gap-12 lg:gap-20">
         {/* Sidebar */}
-        <aside className="lg:block">
-          <nav className="lg:sticky lg:top-28 space-y-1">
+        <aside className="lg:block w-full mb-8 lg:mb-0">
+          <nav className="lg:sticky lg:top-28 space-y-1 max-h-[calc(100vh-8rem)] overflow-y-auto no-scrollbar pb-8">
             <div className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 mb-6 px-3">
               API Reference
             </div>
@@ -170,7 +171,12 @@ export default function DocsPage() {
 
           {/* Sections */}
           {/* ── Overview ─────────────────────────────────── */}
-          <section id="overview" className="scroll-mt-32 space-y-6">
+          <motion.section
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            id="overview" className="scroll-mt-32 space-y-6">
             <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">Overview</h2>
             <div className="prose prose-invert max-w-none text-muted-foreground text-sm md:text-base leading-relaxed space-y-4">
               <p>
@@ -191,10 +197,15 @@ export default function DocsPage() {
       "messages": [{"role": "user", "content": "Hello"}]
     }'`} />
             </div>
-          </section>
+          </motion.section>
 
           {/* ── Authentication ──────────────────────────── */}
-          <section id="auth" className="scroll-mt-32 space-y-6">
+          <motion.section
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            id="auth" className="scroll-mt-32 space-y-6">
             <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">Authentication</h2>
             <p className="text-muted-foreground/80 text-sm md:text-base leading-relaxed">
               All API requests require an API key. Pass it via the <code className="px-1.5 py-0.5 rounded bg-white/5 text-foreground font-bold text-xs font-mono">Authorization</code> header or the <code className="px-1.5 py-0.5 rounded bg-white/5 text-foreground font-bold text-xs font-mono">x-api-key</code> header.
@@ -209,10 +220,15 @@ x-api-key: sk-frenix-YOUR_KEY`} />
             <p className="text-muted-foreground/60 text-sm leading-relaxed opacity-80">
               Keys are generated on the <a href="/api-keys" className="text-foreground font-bold underline decoration-white/20 underline-offset-4 hover:decoration-white/50 transition-all">API Keys</a> dashboard. Keys follow the format <code className="text-foreground/80 font-mono">sk-frenix-*</code>.
             </p>
-          </section>
+          </motion.section>
 
           {/* ── Chat Completions ────────────────────────── */}
-          <section id="chat" className="scroll-mt-32 space-y-6">
+          <motion.section
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            id="chat" className="scroll-mt-32 space-y-6">
             <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">Chat Completions</h2>
             <div className="flex items-center gap-3">
               <Method method="POST" />
@@ -235,10 +251,15 @@ x-api-key: sk-frenix-YOUR_KEY`} />
       "max_tokens": 256,
       "stream": false
     }'`} />
-          </section>
+          </motion.section>
 
           {/* ── Images ──────────────────────────────────── */}
-          <section id="images" className="scroll-mt-32 space-y-8">
+          <motion.section
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            id="images" className="scroll-mt-32 space-y-8">
             <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">Images</h2>
             <div className="grid gap-8">
               {[
@@ -263,10 +284,15 @@ x-api-key: sk-frenix-YOUR_KEY`} />
                 </div>
               ))}
             </div>
-          </section>
+          </motion.section>
 
           {/* ── Audio ───────────────────────────────────── */}
-          <section id="audio" className="scroll-mt-32 space-y-8">
+          <motion.section
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            id="audio" className="scroll-mt-32 space-y-8">
             <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">Audio</h2>
             <div className="grid gap-10">
               <div className="space-y-4">
@@ -291,10 +317,15 @@ x-api-key: sk-frenix-YOUR_KEY`} />
                 <p className="text-muted-foreground text-sm leading-relaxed">Transcribe audio to text. Upload audio file as multipart form data.</p>
               </div>
             </div>
-          </section>
+          </motion.section>
 
           {/* ── Embeddings ─────────────────────────────── */}
-          <section id="embeddings" className="scroll-mt-32 space-y-6">
+          <motion.section
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            id="embeddings" className="scroll-mt-32 space-y-6">
             <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">Embeddings</h2>
             <div className="flex items-center gap-3">
               <Method method="POST" />
@@ -305,10 +336,15 @@ x-api-key: sk-frenix-YOUR_KEY`} />
   "model": "text-embedding-3-small",
   "input": "The food was delicious and the waiter..."
 }`} />
-          </section>
+          </motion.section>
 
           {/* ── Moderations ────────────────────────────── */}
-          <section id="moderations" className="scroll-mt-32 space-y-6">
+          <motion.section
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            id="moderations" className="scroll-mt-32 space-y-6">
             <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">Moderations</h2>
             <div className="flex items-center gap-3">
               <Method method="POST" />
@@ -318,10 +354,15 @@ x-api-key: sk-frenix-YOUR_KEY`} />
             <CopyBlock code={`{
   "input": "Some text to check for policy compliance."
 }`} />
-          </section>
+          </motion.section>
 
           {/* ── Models ─────────────────────────────────── */}
-          <section id="models" className="scroll-mt-32 space-y-6">
+          <motion.section
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            id="models" className="scroll-mt-32 space-y-6">
             <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">Models</h2>
             <div className="flex items-center gap-3">
               <Method method="GET" />
@@ -330,10 +371,15 @@ x-api-key: sk-frenix-YOUR_KEY`} />
             <p className="text-muted-foreground text-sm leading-relaxed">Returns the list of all available models for your tier.</p>
             <CopyBlock code={`curl ${GATEWAY}/v1/models \\
     -H "Authorization: Bearer sk-frenix-YOUR_KEY"`} />
-          </section>
+          </motion.section>
 
           {/* ── Tiers & Limits ─────────────────────────── */}
-          <section id="tiers" className="scroll-mt-32 space-y-6">
+          <motion.section
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            id="tiers" className="scroll-mt-32 space-y-6">
             <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">Tiers & Rate Limits</h2>
             <div className="overflow-hidden rounded-[24px] border border-white/5 bg-white/[0.02]">
               <div className="overflow-x-auto">
@@ -364,10 +410,15 @@ x-api-key: sk-frenix-YOUR_KEY`} />
                 </table>
               </div>
             </div>
-          </section>
+          </motion.section>
 
           {/* ── Errors ──────────────────────────────────── */}
-          <section id="errors" className="scroll-mt-32 space-y-8">
+          <motion.section
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            id="errors" className="scroll-mt-32 space-y-8">
             <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">Errors</h2>
             <div className="overflow-hidden rounded-[24px] border border-white/5 bg-white/[0.02]">
               <div className="overflow-x-auto">
@@ -400,10 +451,15 @@ x-api-key: sk-frenix-YOUR_KEY`} />
                 </table>
               </div>
             </div>
-          </section>
+          </motion.section>
 
           {/* ── All Endpoints ──────────────────────────── */}
-          <section id="all-endpoints" className="scroll-mt-32 space-y-8 pb-32">
+          <motion.section
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            id="all-endpoints" className="scroll-mt-32 space-y-8 pb-32">
             <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">All Endpoints</h2>
             <div className="overflow-hidden rounded-[24px] border border-white/5 bg-white/[0.02]">
               <div className="overflow-x-auto">
@@ -445,7 +501,7 @@ x-api-key: sk-frenix-YOUR_KEY`} />
                 </table>
               </div>
             </div>
-          </section>
+          </motion.section>
         </main>
       </div>
     </div>

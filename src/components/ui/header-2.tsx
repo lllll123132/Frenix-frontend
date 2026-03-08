@@ -96,6 +96,26 @@ export function Header({ links, user, onSignOut }: HeaderProps) {
                             {link.label}
                         </Link>
                     ))}
+                    <div className="flex items-center gap-0.5 ml-2 mr-1 p-0.5 rounded-[10px] bg-white/[0.03] border border-white/5 shadow-inner">
+                        <Link
+                            href="/docs"
+                            className={cn(
+                                "hidden md:block px-3 py-1.5 rounded-md text-[11px] font-bold transition-all",
+                                pathname.startsWith('/docs') ? "bg-white/10 text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+                            )}
+                        >
+                            Docs
+                        </Link>
+                        <Link
+                            href="/playground"
+                            className={cn(
+                                "hidden md:block px-3 py-1.5 rounded-md text-[11px] font-bold transition-all",
+                                pathname.startsWith('/playground') ? "bg-white/10 text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+                            )}
+                        >
+                            Playground
+                        </Link>
+                    </div>
                     <div className="mx-1.5 h-4 w-px bg-border/60" />
                     {user ? (
                         <UserDropdown user={user} onSignOut={onSignOut} />

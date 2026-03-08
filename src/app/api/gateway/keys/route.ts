@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { createGatewayKey } from '@/lib/gateway';
+import { createGatewayKey, fetchStatsByEmail } from '@/lib/gateway';
 
 export async function POST(req: NextRequest) {
     const supabase = await createClient();
@@ -20,6 +20,29 @@ export async function POST(req: NextRequest) {
     const body = await req.json().catch(() => ({}));
 
     try {
+        // First check if the user already has a key via the backend
+        try {
+            const existingStats = await fetchStatsByEmail(email);
+            if (existingStats && existingStats.fullKey) {
+                // Key already exists, set it as cookie and return it immediately
+                cookieStore.set('frenix_gateway_key', existingStats.fullKey, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === 'production',
+                    sameSite: 'strict',
+                    maxAge: 60 * 60 * 24 * 365, // 1 year
+                    path: '/',
+                });
+                return NextResponse.json({
+                    key: existingStats.fullKey,
+                    tier: existingStats.tier,
+                    email: existingStats.email,
+                    message: "Retrieved existing key."
+                }, { status: 200 });
+            }
+        } catch (checkErr: any) {
+            // Ignore if not found, proceed to create it
+        }
+
         const result = await createGatewayKey({
             email,
             name: sessionUser.name?.split(' ')[0] || undefined,
