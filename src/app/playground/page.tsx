@@ -13,7 +13,7 @@ type Message = { role: 'user' | 'assistant' | 'system', content: string };
 export default function PlaygroundPage() {
     const [apiKey, setApiKey] = useState('');
     const [apiUrl, setApiUrl] = useState(GATEWAY);
-    const [model, setModel] = useState('provider-1/llama-3.1-8b-instruct');
+    const [model, setModel] = useState('');
     const [systemPrompt, setSystemPrompt] = useState('You are a helpful AI assistant.');
     const [temperature, setTemperature] = useState(0.7);
     const [messages, setMessages] = useState<Message[]>([]);
@@ -70,6 +70,9 @@ export default function PlaygroundPage() {
                     const data = await res.json();
                     if (data.data && Array.isArray(data.data)) {
                         setModels(data.data);
+                        if (data.data.length > 0) {
+                            setModel(data.data[0].id);
+                        }
                     }
                 }
             } catch (error) {
@@ -333,16 +336,15 @@ export default function PlaygroundPage() {
                                         onChange={e => setModel(e.target.value)}
                                         className="account-input appearance-none cursor-pointer pr-10"
                                         style={{ backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="gray" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>')`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 12px center' }}
+                                        disabled={models.length === 0}
                                     >
-                                        <option value="provider-1/llama-3.1-8b-instruct">Llama 3.1 8B Instruct</option>
-                                        <option value="gpt-4o">GPT-4o</option>
-                                        <option value="claude-3-5-sonnet-20240620">Claude 3.5 Sonnet</option>
-                                        <option value="provider-1/mixtral-8x7b-instruct-v0.1">Mixtral 8x7B</option>
-                                        {models.length > 0 && <optgroup label="Gateway Models">
-                                            {models.map(m => (
+                                        {models.length === 0 ? (
+                                            <option value="">{isLoadingModels ? 'Loading models...' : 'Enter API Key to load models'}</option>
+                                        ) : (
+                                            models.map(m => (
                                                 <option key={m.id} value={m.id}>{m.id}</option>
-                                            ))}
-                                        </optgroup>}
+                                            ))
+                                        )}
                                     </select>
                                 </div>
 
