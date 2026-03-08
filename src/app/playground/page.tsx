@@ -13,7 +13,7 @@ type Message = { role: 'user' | 'assistant' | 'system', content: string };
 export default function PlaygroundPage() {
     const [apiKey, setApiKey] = useState('');
     const [apiUrl, setApiUrl] = useState(GATEWAY);
-    const [model, setModel] = useState('');
+    const [model, setModel] = useState('provider-1/llama-3.1-8b-instruct');
     const [systemPrompt, setSystemPrompt] = useState('You are a helpful AI assistant.');
     const [temperature, setTemperature] = useState(0.7);
     const [messages, setMessages] = useState<Message[]>([]);
@@ -330,22 +330,14 @@ export default function PlaygroundPage() {
                                 <h3 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Configuration</h3>
 
                                 <div className="space-y-2">
-                                    <label className="text-xs font-bold text-foreground">Model</label>
-                                    <select
+                                    <label className="text-xs font-bold text-foreground">Model ID</label>
+                                    <input
+                                        type="text"
                                         value={model}
                                         onChange={e => setModel(e.target.value)}
-                                        className="account-input appearance-none cursor-pointer pr-10"
-                                        style={{ backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="gray" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>')`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 12px center' }}
-                                        disabled={models.length === 0}
-                                    >
-                                        {models.length === 0 ? (
-                                            <option value="">{isLoadingModels ? 'Loading models...' : 'Enter API Key to load models'}</option>
-                                        ) : (
-                                            models.map(m => (
-                                                <option key={m.id} value={m.id}>{m.id}</option>
-                                            ))
-                                        )}
-                                    </select>
+                                        placeholder="Enter model ID..."
+                                        className="account-input"
+                                    />
                                 </div>
 
                                 <div className="space-y-2 pt-2">
