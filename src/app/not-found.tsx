@@ -36,7 +36,7 @@ export default function NotFound() {
           lineHeight: '1.6',
           marginBottom: '32px',
         }}>
-          The page you&apos;re looking for doesn&apos;t exist or has been moved.
+          Oh! The page you&apos;re looking for doesn&apos;t exist or has been moved.
         </p>
         <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
           <Link href="/" className="btn-primary" style={{ padding: '10px 24px', fontSize: '14px' }}>

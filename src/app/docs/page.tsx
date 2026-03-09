@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
-const GATEWAY = process.env.NEXT_PUBLIC_GATEWAY_URL || 'https://api.frenix.io';
+const GATEWAY = process.env.NEXT_PUBLIC_GATEWAY_URL || 'https://api.frenix.sh';
 
 function CopyBlock({ code, lang = 'bash' }: { code: string; lang?: string }) {
   const [copied, setCopied] = useState(false);

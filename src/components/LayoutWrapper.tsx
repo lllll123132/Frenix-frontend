@@ -43,8 +43,11 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
 
     const navLinks = [
         { label: 'Dashboard', href: '/dashboard' },
+        { label: 'Models', href: '/models' },
         { label: 'Pricing', href: '/#pricing' },
     ];
+
+    const isFullWidth = pathname === '/models' || pathname === '/playground';
 
     return (
         <div style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column' }}>
@@ -60,9 +63,9 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
                 flex: 1,
                 position: 'relative',
                 width: '100%',
-                maxWidth: '1200px',
+                maxWidth: isFullWidth ? 'none' : '1200px',
                 margin: '0 auto',
-                padding: isLanding ? '0' : '0 24px'
+                padding: isLanding || isFullWidth ? '0' : '0 24px'
             }}>
                 {children}
             </main>
@@ -107,7 +110,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
                             <Link href="/privacy" className="hover-text-primary">Privacy policy</Link>
                             <Link href="/refund" className="hover-text-primary">Refund policy</Link>
                             <Link href="/status" className="hover-text-primary">Status</Link>
-                            <a href="mailto:support@frenix.io" className="hover-text-primary">Contact support</a>
+                            <a href="mailto:support@frenix.sh" className="hover-text-primary">Contact support</a>
                         </div>
                     </div>
                 </footer>

@@ -30,34 +30,34 @@ const OpenAIIcon = ({ size = 17 }: { size?: number }) => (
 
 const featuredModels = [
   {
-    name: 'Gemini 3 Pro',
+    name: 'Gemini 3.1 Pro',
     provider: 'Google DeepMind',
     Icon: GoogleIcon,
-    tokensWk: '70.9B',
-    latency: '10.8s',
-    change: '+165.62%',
+    tokensWk: '142.2B',
+    latency: '842ms',
+    change: '+12.4%',
     positive: true,
     isNew: true,
   },
   {
-    name: 'Claude 4.5 Sonnet',
+    name: 'Claude Opus 4.6',
     provider: 'Anthropic',
     Icon: AnthropicIcon,
-    tokensWk: '18.9B',
-    latency: '633ms',
-    change: '-4.13%',
-    positive: false,
+    tokensWk: '28.5B',
+    latency: '1.2s',
+    change: '+8.2%',
+    positive: true,
     isNew: true,
   },
   {
-    name: 'GPT 5.1',
+    name: 'Gpt 5.3 Codex',
     provider: 'OpenAI',
     Icon: OpenAIIcon,
-    tokensWk: '324.8B',
-    latency: '1.4s',
-    change: '+4.33%',
+    tokensWk: '842.1B',
+    latency: '2.1s',
+    change: '+15.7%',
     positive: true,
-    isNew: false,
+    isNew: true,
   },
 ];
 
@@ -146,13 +146,32 @@ export default function Home() {
               <button
                 className="btn-copy-endpoint"
                 onClick={() => {
-                  navigator.clipboard.writeText('api.frenix.io/v1');
+                  navigator.clipboard.writeText('api.frenix.sh/v1');
                   toast.success('Endpoint copied');
                 }}
               >
-                <span>api.frenix.io/v1</span>
+                <span>api.frenix.sh/v1</span>
                 <Copy size={13} strokeWidth={2} style={{ opacity: 0.4 }} />
               </button>
+            </div>
+
+            {/* Partner Logos */}
+            <div className="mt-12 flex items-center gap-8 opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500">
+              <span className="text-[10px] uppercase tracking-widest font-bold whitespace-nowrap">Integrated with:</span>
+              <div className="flex items-center gap-6">
+                <div className="flex items-center gap-2">
+                  <OpenAIIcon size={18} />
+                  <span className="text-xs font-bold">OpenAI</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <AnthropicIcon size={18} />
+                  <span className="text-xs font-bold">Anthropic</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <GoogleIcon size={18} />
+                  <span className="text-xs font-bold">Google</span>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -246,7 +265,7 @@ export default function Home() {
 
               <div className="bg-black/40 p-5 rounded-2xl border border-white/5 font-mono text-[11px] md:text-xs text-muted-foreground/80 overflow-hidden">
                 <div className="opacity-50 mb-1"># Unified endpoint</div>
-                <div><span className="text-primary">curl</span> -X POST api.frenix.io/v1/chat/completions \</div>
+                <div><span className="text-primary">curl</span> -X POST api.frenix.sh/v1/chat/completions \</div>
                 <div>&nbsp; -H <span className="text-emerald-400/80">&quot;Authorization: Bearer sk-frenix-...&quot;</span> \</div>
                 <div>&nbsp; -d <span className="text-emerald-400/80">&apos;{`{"model":"gpt-4o","messages":[...]}`}&apos;</span></div>
               </div>

@@ -62,7 +62,10 @@ export default function PlaygroundPage() {
             setIsLoadingModels(true);
             try {
                 // remove trailing slash from URL
-                const normalizedUrl = apiUrl.replace(/\/$/, '');
+                let normalizedUrl = apiUrl.replace(/\/$/, '');
+                if (!normalizedUrl.startsWith('http')) {
+                    normalizedUrl = `http://${normalizedUrl}`;
+                }
                 const res = await fetch(`${normalizedUrl}/v1/models`, {
                     headers: { 'Authorization': `Bearer ${apiKey}` }
                 });
@@ -70,8 +73,9 @@ export default function PlaygroundPage() {
                     const data = await res.json();
                     if (data.data && Array.isArray(data.data)) {
                         setModels(data.data);
-                        if (data.data.length > 0) {
-                            setModel(data.data[0].id);
+                        // Only set initial model if currently empty or default
+                        if (!model || model === 'provider-1/llama-3.1-8b-instruct') {
+                            if (data.data.length > 0) setModel(data.data[0].id);
                         }
                     }
                 }
@@ -82,7 +86,7 @@ export default function PlaygroundPage() {
             }
         };
         fetchModels();
-    }, [apiKey]);
+    }, [apiKey, apiUrl]);
 
     const handleStop = () => {
         if (abortControllerRef.current) {
@@ -115,7 +119,10 @@ export default function PlaygroundPage() {
             }
             apiMessages.push(...currentMessages);
 
-            const normalizedUrl = apiUrl.replace(/\/$/, '');
+            let normalizedUrl = apiUrl.replace(/\/$/, '');
+            if (!normalizedUrl.startsWith('http')) {
+                normalizedUrl = `http://${normalizedUrl}`;
+            }
             const response = await fetch(`${normalizedUrl}/v1/chat/completions`, {
                 method: 'POST',
                 headers: {
@@ -320,7 +327,7 @@ export default function PlaygroundPage() {
                                         type="text"
                                         value={apiUrl}
                                         onChange={handleSaveUrl}
-                                        placeholder="https://api.frenix.io"
+                                        placeholder="https://api.frenix.sh"
                                         className="account-input"
                                     />
                                 </div>
@@ -330,14 +337,36 @@ export default function PlaygroundPage() {
                                 <h3 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Configuration</h3>
 
                                 <div className="space-y-2">
-                                    <label className="text-xs font-bold text-foreground">Model ID</label>
-                                    <input
-                                        type="text"
-                                        value={model}
-                                        onChange={e => setModel(e.target.value)}
-                                        placeholder="Enter model ID..."
-                                        className="account-input"
-                                    />
+                                    <label className="text-xs font-bold text-foreground flex justify-between items-center">
+                                        Model ID
+                                        {isLoadingModels && <Loader2 size={10} className="animate-spin opacity-50" />}
+                                    </label>
+
+                                    {models.length > 0 ? (
+                                        <select
+                                            value={model}
+                                            onChange={e => setModel(e.target.value)}
+                                            className="account-input appearance-none bg-no-repeat bg-[right_12px_center] bg-[length:16px]"
+                                            style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")` }}
+                                        >
+                                            {models.map(m => (
+                                                <option key={m.id} value={m.id} className="bg-bg-card text-text-main">
+                                                    {m.id}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    ) : (
+                                        <input
+                                            type="text"
+                                            value={model}
+                                            onChange={e => setModel(e.target.value)}
+                                            placeholder="Enter model ID..."
+                                            className="account-input"
+                                        />
+                                    )}
+                                    <p className="text-[10px] text-muted-foreground/60 font-medium">
+                                        {models.length > 0 ? `${models.length} models available` : 'Connect key to browse models'}
+                                    </p>
                                 </div>
 
                                 <div className="space-y-2 pt-2">

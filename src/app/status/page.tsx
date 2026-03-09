@@ -21,7 +21,7 @@ export default function StatusPage() {
         try {
             // We call the gateway status through our frontend API or directly if enabled
             const gatewayUrl = process.env.NEXT_PUBLIC_GATEWAY_URL || 'http://localhost:3000';
-            const res = await fetch(`${gatewayUrl}/status`, { cache: 'no-store' });
+            const res = await fetch(`${gatewayUrl}/v1/status`, { cache: 'no-store' });
             const data = await res.json();
             setStatus(data);
             setError(null);
@@ -122,7 +122,7 @@ export default function StatusPage() {
             </div>
 
             <p style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '13px' }}>
-                If you are experiencing issues not listed here, please contact <a href="mailto:support@frenix.io" style={{ color: 'var(--primary)' }}>support@frenix.io</a>
+                If you are experiencing issues not listed here, please contact <a href="mailto:support@frenix.sh" style={{ color: 'var(--primary)' }}>support@frenix.sh</a>
             </p>
         </div>
     );
