@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react';
-import { Copy, Check, ChevronRight, ExternalLink, Zap, Shield, Key, Globe, Image, Mic, Brain, AlertTriangle, Layers } from 'lucide-react';
+import { Copy, Check, ChevronRight, ExternalLink, Zap, Shield, Key, Globe, Image, Mic, Brain, AlertTriangle, Layers, Terminal } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
@@ -76,6 +76,7 @@ const sections = [
   { id: 'embeddings', label: 'Embeddings', icon: Brain },
   { id: 'moderations', label: 'Moderations', icon: Shield },
   { id: 'models', label: 'Models', icon: Layers },
+  { id: 'claude-code', label: 'Claude Code', icon: Terminal },
   { id: 'tiers', label: 'Tiers & Limits', icon: AlertTriangle },
   { id: 'errors', label: 'Errors', icon: AlertTriangle },
 ];
@@ -299,22 +300,29 @@ x-api-key: sk-frenix-YOUR_KEY`} />
                 <div className="flex items-center gap-3">
                   <Method method="POST" />
                   <code className="text-sm font-bold text-foreground/60 font-mono">/v1/audio/speech</code>
-                  <Badge color="blue">Pro</Badge>
+                  <Badge color="blue">Provider-3</Badge>
                 </div>
-                <p className="text-muted-foreground text-sm leading-relaxed">Convert text to speech. Returns audio binary.</p>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  Convert text to speech. Powered by <strong>OpenAI.fm</strong> (Provider-3). Returns audio binary.
+                </p>
                 <CopyBlock code={`{
   "model": "tts-1",
   "input": "Hello, welcome to Frenix.",
   "voice": "alloy"
 }`} />
+                <p className="text-xs text-muted-foreground/60 italic">Supported models: tts-1, tts-1-hd</p>
               </div>
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <Method method="POST" />
                   <code className="text-sm font-bold text-foreground/60 font-mono">/v1/audio/transcriptions</code>
+                  <Badge color="yellow">Provider-4</Badge>
                   <Badge color="yellow">Multipart</Badge>
                 </div>
-                <p className="text-muted-foreground text-sm leading-relaxed">Transcribe audio to text. Upload audio file as multipart form data.</p>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  Transcribe audio to text. Powered by <strong>Pollinations.ai</strong> (Provider-4). Upload audio file as multipart form data.
+                </p>
+                <p className="text-xs text-muted-foreground/60 italic">Supported models: whisper-1</p>
               </div>
             </div>
           </motion.section>
@@ -373,6 +381,49 @@ x-api-key: sk-frenix-YOUR_KEY`} />
     -H "Authorization: Bearer sk-frenix-YOUR_KEY"`} />
           </motion.section>
 
+          {/* ── Claude Code ──────────────────────────── */}
+          <motion.section
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            id="claude-code" className="scroll-mt-32 space-y-6">
+            <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">Claude Code Integration</h2>
+            <div className="prose prose-invert max-w-none text-muted-foreground text-sm md:text-base leading-relaxed space-y-4">
+              <p>
+                Frenix supports <strong>Claude Code</strong>, Anthropic's command-line tool. You can route Claude Code through Frenix to use your available credits and models.
+              </p>
+            </div>
+
+            <div className="space-y-6">
+              <div className="space-y-3">
+                <h3 className="text-sm font-black uppercase tracking-[0.2em] text-foreground/40 italic">PowerShell (Windows)</h3>
+                <CopyBlock lang="powershell" code={`# 1. Set the Model and URL
+$env:ANTHROPIC_MODEL = "claude-3-5-sonnet-20241022"
+$env:ANTHROPIC_BASE_URL = "${GATEWAY}"
+
+# 2. Set your Frenix API Key
+$env:ANTHROPIC_API_KEY = "sk-frenix-YOUR_KEY"
+
+# 3. Launch
+claude`} />
+              </div>
+
+              <div className="space-y-3">
+                <h3 className="text-sm font-black uppercase tracking-[0.2em] text-foreground/40 italic">Bash (macOS / Linux)</h3>
+                <CopyBlock lang="bash" code={`# 1. Set the Model and URL
+export ANTHROPIC_MODEL="claude-3-5-sonnet-20241022"
+export ANTHROPIC_BASE_URL="${GATEWAY}"
+
+# 2. Set your Frenix API Key
+export ANTHROPIC_API_KEY="sk-frenix-YOUR_KEY"
+
+# 3. Launch
+claude`} />
+              </div>
+            </div>
+          </motion.section>
+
           {/* ── Tiers & Limits ─────────────────────────── */}
           <motion.section
             initial={{ opacity: 0, y: 30 }}
@@ -389,21 +440,23 @@ x-api-key: sk-frenix-YOUR_KEY`} />
                       <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">Feature</th>
                       <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">Free</th>
                       <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">Pro</th>
+                      <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-primary/80">EvolveX</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5">
                     {[
-                      ['Rate limit', '10 req/min', '20 req/min'],
-                      ['Models', 'Community models', 'All models'],
-                      ['Pro models', 'No', 'Yes'],
-                      ['Providers', 'Secondary', 'Primary + Secondary'],
-                      ['Streaming', 'Yes', 'Yes'],
-                      ['Cost tracking', 'Yes', 'Yes'],
-                    ].map(([feature, free, pro], i) => (
+                      ['Rate limit', '10 req/min', '20 req/min', 'Unlimited'],
+                      ['Models', 'Community', 'All models', 'All models'],
+                      ['Pro models', 'No', 'Yes', 'Yes'],
+                      ['Providers', 'Secondary', 'Primary + Secondary', 'All Providers'],
+                      ['Streaming', 'Yes', 'Yes', 'Yes'],
+                      ['Cost tracking', 'Yes', 'Yes', 'Yes'],
+                    ].map(([feature, free, pro, evolvex], i) => (
                       <tr key={feature} className="hover:bg-white/[0.01] transition-colors">
                         <td className="px-6 py-4 text-xs font-bold text-foreground">{feature}</td>
                         <td className="px-6 py-4 text-xs font-medium text-muted-foreground">{free}</td>
                         <td className="px-6 py-4 text-xs font-medium text-muted-foreground">{pro}</td>
+                        <td className="px-6 py-4 text-xs font-black text-primary/90">{evolvex}</td>
                       </tr>
                     ))}
                   </tbody>
