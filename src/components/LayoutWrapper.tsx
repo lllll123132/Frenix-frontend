@@ -10,7 +10,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     const pathname = usePathname();
     const router = useRouter();
     const isLanding = pathname === '/';
-    const isAuth = pathname.startsWith('/api/auth') || pathname === '/signin';
+    const isAuth = pathname.startsWith('/api/auth') || pathname === '/signin' || pathname === '/oauth/consent';
 
     const [user, setUser] = useState<any>(null);
     const [status, setStatus] = useState<'loading' | 'authenticated' | 'unauthenticated'>('loading');
@@ -47,7 +47,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
         { label: 'Pricing', href: '/#pricing' },
     ];
 
-    const isFullWidth = pathname === '/models' || pathname === '/playground';
+    const isFullWidth = pathname === '/models' || pathname === '/playground' || pathname === '/oauth/consent';
 
     return (
         <div style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column' }}>

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import Link from 'next/link';
-import { User, Mail, AtSign, BadgeCheck, ShieldCheck, Camera } from 'lucide-react';
+import { User, Mail, AtSign, BadgeCheck, ShieldCheck, Camera, Code2, Plus, Globe, Trash2, Key, ExternalLink, Copy, Check } from 'lucide-react';
 
 export default function AccountPage() {
     const supabase = createClient();
@@ -19,6 +19,18 @@ export default function AccountPage() {
     const [lastName, setLastName] = useState('');
     const [username, setUsername] = useState('');
     const [avatarUrl, setAvatarUrl] = useState('');
+    const [activeTab, setActiveTab] = useState<'profile' | 'developer'>('profile');
+
+    // OAuth Apps state
+    const [oauthApps, setOauthApps] = useState<any[]>([]);
+    const [loadingApps, setLoadingApps] = useState(false);
+    const [isCreatingApp, setIsCreatingApp] = useState(false);
+    const [newAppName, setNewAppName] = useState('');
+    const [newAppRedirects, setNewAppRedirects] = useState('');
+    const [newAppLogo, setNewAppLogo] = useState('');
+    const [showSecret, setShowSecret] = useState<string | null>(null);
+    const [copiedId, setCopiedId] = useState<string | null>(null);
+    const [copiedSecret, setCopiedSecret] = useState<string | null>(null);
 
     useEffect(() => {
         const checkUser = async () => {
@@ -39,7 +51,69 @@ export default function AccountPage() {
             setLoading(false);
         };
         checkUser();
+        fetchOAuthApps();
     }, [router]);
+
+    const fetchOAuthApps = async () => {
+        setLoadingApps(true);
+        try {
+            const res = await fetch('/api/oauth/apps');
+            if (res.ok) {
+                const data = await res.json();
+                setOauthApps(data);
+            }
+        } catch (err) {
+            console.error('Failed to fetch apps:', err);
+        } finally {
+            setLoadingApps(false);
+        }
+    };
+
+    const handleCreateApp = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsCreatingApp(true);
+        try {
+            const res = await fetch('/api/oauth/apps', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: newAppName,
+                    redirect_uris: newAppRedirects.split(',').map(s => s.trim()).filter(Boolean),
+                    logo_url: newAppLogo
+                })
+            });
+
+            if (res.ok) {
+                const newApp = await res.json();
+                toast.success('OAuth App created!');
+                setOauthApps([newApp, ...oauthApps]);
+                setNewAppName('');
+                setNewAppRedirects('');
+                setNewAppLogo('');
+                setShowSecret(newApp.client_secret);
+            } else {
+                const err = await res.json();
+                toast.error(err.error || 'Failed to create app');
+            }
+        } catch (err) {
+            toast.error('An error occurred');
+        } finally {
+            setIsCreatingApp(false);
+        }
+    };
+
+    const handleDeleteApp = async (id: string) => {
+        if (!confirm('Are you sure you want to delete this application?')) return;
+        try {
+            const res = await fetch(`/api/oauth/apps/${id}`, { method: 'DELETE' });
+            if (res.ok) {
+                toast.success('App deleted');
+                setOauthApps(oauthApps.filter(a => a.id !== id));
+            }
+        } catch (err) {
+            toast.error('Failed to delete app');
+        }
+    };
 
     const handleUpdate = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -64,6 +138,18 @@ export default function AccountPage() {
             setUser(updated);
         }
         setUpdating(false);
+    };
+
+    const copyToClipboard = (text: string, type: 'id' | 'secret') => {
+        navigator.clipboard.writeText(text);
+        if (type === 'id') {
+            setCopiedId(text);
+            setTimeout(() => setCopiedId(null), 2000);
+        } else {
+            setCopiedSecret(text);
+            setTimeout(() => setCopiedSecret(null), 2000);
+        }
+        toast.success(`Copied ${type === 'id' ? 'Client ID' : 'Client Secret'} to clipboard`);
     };
 
     if (loading) return (
@@ -91,11 +177,65 @@ export default function AccountPage() {
                 </div>
                 <h1 style={{ fontSize: '42px', fontWeight: '800', letterSpacing: '-1.5px', marginBottom: '12px', color: 'var(--text-main)' }}>Account Portal</h1>
                 <p style={{ color: 'var(--text-muted)', fontSize: '15px', maxWidth: '500px', margin: '0 auto' }}>
-                    Manage your gateway identity, profile picture, and account metadata.
+                    Manage your gateway identity, developer applications, and account metadata.
                 </p>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '32px' }} className="animate-fade-2">
+            <div style={{
+                display: 'flex',
+                gap: '8px',
+                background: 'rgba(255,255,255,0.03)',
+                padding: '6px',
+                borderRadius: '16px',
+                width: 'fit-content',
+                margin: '0 auto 40px auto',
+                border: '1px solid rgba(255,255,255,0.05)'
+            }}>
+                <button
+                    onClick={() => setActiveTab('profile')}
+                    className={activeTab === 'profile' ? 'tab-active' : 'tab-inactive'}
+                    style={{
+                        padding: '10px 24px',
+                        borderRadius: '12px',
+                        fontSize: '13px',
+                        fontWeight: '700',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        transition: 'all 0.2s',
+                        background: activeTab === 'profile' ? 'var(--primary)' : 'transparent',
+                        color: activeTab === 'profile' ? '#000' : 'var(--text-muted)'
+                    }}
+                >
+                    <User size={16} />
+                    Profile
+                </button>
+                {/* OAuth Disabled Temporarily */}
+                {/* 
+                <button
+                    onClick={() => setActiveTab('developer')}
+                    className={activeTab === 'developer' ? 'tab-active' : 'tab-inactive'}
+                    style={{
+                        padding: '10px 24px',
+                        borderRadius: '12px',
+                        fontSize: '13px',
+                        fontWeight: '700',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        transition: 'all 0.2s',
+                        background: activeTab === 'developer' ? 'var(--primary)' : 'transparent',
+                        color: activeTab === 'developer' ? '#000' : 'var(--text-muted)'
+                    }}
+                >
+                    <Code2 size={16} />
+                    Developer
+                </button>
+                */}
+            </div>
+
+            {activeTab === 'profile' ? (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '32px' }} className="animate-fade-2">
                 {/* Left: Preview Card */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                     <div className="glass-card" style={{ padding: '32px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
@@ -247,6 +387,191 @@ export default function AccountPage() {
                     </form>
                 </div>
             </div>
+            ) : (
+                <div className="animate-fade-2" style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+                    {/* Create App Section */}
+                    <div className="glass-card" style={{ padding: '40px' }}>
+                        <div style={{ marginBottom: '32px' }}>
+                            <h2 style={{ fontSize: '24px', fontWeight: '800', color: 'var(--text-main)', marginBottom: '8px' }}>Create New OAuth App</h2>
+                            <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>Build a "Sign in with Frenix" experience for your users.</p>
+                        </div>
+
+                        <form onSubmit={handleCreateApp} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                    <label style={{ fontSize: '11px', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Application Name</label>
+                                    <div style={{ position: 'relative' }}>
+                                        <Globe size={14} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                                        <input
+                                            type="text"
+                                            value={newAppName}
+                                            onChange={(e) => setNewAppName(e.target.value)}
+                                            className="account-input"
+                                            style={{ paddingLeft: '40px' }}
+                                            placeholder="My Awesome App"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                    <label style={{ fontSize: '11px', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Logo URL</label>
+                                    <div style={{ position: 'relative' }}>
+                                        <Camera size={14} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                                        <input
+                                            type="url"
+                                            value={newAppLogo}
+                                            onChange={(e) => setNewAppLogo(e.target.value)}
+                                            className="account-input"
+                                            style={{ paddingLeft: '40px' }}
+                                            placeholder="https://example.com/logo.png"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                <label style={{ fontSize: '11px', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Redirect URIs (comma separated)</label>
+                                <input
+                                    type="text"
+                                    value={newAppRedirects}
+                                    onChange={(e) => setNewAppRedirects(e.target.value)}
+                                    className="account-input"
+                                    placeholder="http://localhost:3000/callback, https://myapp.com/auth"
+                                    required
+                                />
+                                <p style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Exact matches only. No wildcards allowed for OAuth 2.1.</p>
+                            </div>
+
+                            <button
+                                type="submit"
+                                className="btn-primary"
+                                disabled={isCreatingApp}
+                                style={{ height: '52px', justifyContent: 'center' }}
+                            >
+                                {isCreatingApp ? 'Creating...' : (
+                                    <>
+                                        <Plus size={18} />
+                                        <span>Register Application</span>
+                                    </>
+                                )}
+                            </button>
+                        </form>
+                    </div>
+
+                    {/* App Secrets Modal (Simplified as a highlight box) */}
+                    {showSecret && (
+                        <div className="glass-card" style={{ padding: '32px', border: '2px solid var(--primary)', background: 'rgba(45, 212, 191, 0.05)' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                    <ShieldCheck color="var(--primary)" />
+                                    <h3 style={{ fontWeight: '800', fontSize: '18px' }}>Client Secret Created</h3>
+                                </div>
+                                <button onClick={() => setShowSecret(null)} style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Dismiss</button>
+                            </div>
+                            <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '16px' }}>
+                                Save this secret now. It will not be shown again for security reasons.
+                            </p>
+                            <div style={{ background: '#000', padding: '16px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', fontFamily: 'monospace', fontSize: '14px', position: 'relative' }}>
+                                <span style={{ color: 'var(--primary)' }}>{showSecret}</span>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Existing Apps List */}
+                    <div className="glass-card" style={{ padding: '0px', overflow: 'hidden' }}>
+                        <div style={{ padding: '32px 40px', borderBottom: '1px solid var(--border)' }}>
+                            <h2 style={{ fontSize: '13px', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '2px' }}>Your Applications</h2>
+                        </div>
+                        
+                        {loadingApps ? (
+                            <div style={{ textAlign: 'center', padding: '40px' }}><div className="loader" style={{ margin: '0 auto' }}></div></div>
+                        ) : oauthApps.length === 0 ? (
+                            <div style={{ textAlign: 'center', padding: '60px' }}>
+                                <Globe size={48} style={{ color: 'var(--text-muted)', margin: '0 auto 16px auto', opacity: 0.3 }} />
+                                <h3 style={{ fontSize: '16px', fontWeight: '700', color: 'var(--text-muted)' }}>No OAuth apps found</h3>
+                                <p style={{ fontSize: '13px', color: 'var(--text-muted)', opacity: 0.6 }}>Create your first app to get started.</p>
+                            </div>
+                        ) : (
+                            <div style={{ overflowX: 'auto' }}>
+                                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                                    <thead>
+                                        <tr style={{ borderBottom: '1px solid var(--border)', background: 'rgba(255,255,255,0.02)' }}>
+                                            <th style={{ padding: '16px 40px', fontSize: '11px', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Name</th>
+                                            <th style={{ padding: '16px 20px', fontSize: '11px', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Client ID</th>
+                                            <th style={{ padding: '16px 20px', fontSize: '11px', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Client Type</th>
+                                            <th style={{ padding: '16px 20px', fontSize: '11px', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px' }}>Registration</th>
+                                            <th style={{ padding: '16px 40px', fontSize: '11px', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', textAlign: 'right' }}>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {oauthApps.map((app) => (
+                                            <tr key={app.id} style={{ borderBottom: '1px solid var(--border)', transition: 'background 0.2s' }} className="hover-bg-soft">
+                                                <td style={{ padding: '24px 40px' }}>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                                        <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'var(--bg-soft)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', border: '1px solid var(--border)' }}>
+                                                            {app.logo_url ? <img src={app.logo_url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <Globe size={14} color="var(--text-muted)" />}
+                                                        </div>
+                                                        <span style={{ fontWeight: '700', color: 'var(--text-main)', fontSize: '14px' }}>{app.name}</span>
+                                                    </div>
+                                                </td>
+                                                <td style={{ padding: '24px 20px' }}>
+                                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.03)', padding: '6px 10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)', width: 'fit-content' }}>
+                                                            <code style={{ fontSize: '11px', color: 'var(--primary)', fontFamily: 'monospace' }}>{app.client_id.slice(0, 15)}...</code>
+                                                            <button onClick={() => copyToClipboard(app.client_id, 'id')} style={{ color: 'var(--text-muted)' }}>
+                                                                {copiedId === app.client_id ? <Check size={12} color="#10b981" /> : <Copy size={12} />}
+                                                            </button>
+                                                        </div>
+                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.03)', padding: '6px 10px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)', width: 'fit-content' }}>
+                                                            <code style={{ fontSize: '11px', color: 'var(--text-muted)', fontFamily: 'monospace' }}>••••••••••••</code>
+                                                            <button onClick={() => copyToClipboard(app.client_secret, 'secret')} style={{ color: 'var(--text-muted)' }}>
+                                                                {copiedSecret === app.client_secret ? <Check size={12} color="#10b981" /> : <Key size={12} />}
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style={{ padding: '24px 20px' }}>
+                                                    <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-main)', background: 'rgba(255,255,255,0.05)', padding: '4px 10px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                                                        Confidential
+                                                    </span>
+                                                </td>
+                                                <td style={{ padding: '24px 20px' }}>
+                                                    <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--primary)', background: 'rgba(45, 212, 191, 0.1)', padding: '4px 10px', borderRadius: '20px', border: '1px solid rgba(45, 212, 191, 0.2)' }}>
+                                                        Programmatic
+                                                    </span>
+                                                </td>
+                                                <td style={{ padding: '24px 40px', textAlign: 'right' }}>
+                                                    <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+                                                        <button 
+                                                            onClick={() => {
+                                                                const url = `${window.location.origin}/oauth/consent?authorization_id=test_preview_only`;
+                                                                window.open(url, '_blank');
+                                                            }}
+                                                            className="icon-btn-gold" 
+                                                            title="Preview Consent Screen"
+                                                            style={{ padding: '10px', borderRadius: '12px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border)', cursor: 'pointer' }}
+                                                        >
+                                                            <ExternalLink size={16} color="var(--primary)" />
+                                                        </button>
+                                                        <button 
+                                                            onClick={() => handleDeleteApp(app.id)}
+                                                            className="icon-btn-danger" 
+                                                            title="Delete Application"
+                                                            style={{ padding: '10px', borderRadius: '12px', background: 'rgba(239, 68, 68, 0.05)', border: '1px solid rgba(239, 68, 68, 0.1)', cursor: 'pointer' }}
+                                                        >
+                                                            <Trash2 size={16} color="#ef4444" />
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
 
             <div className="animate-fade-3" style={{ textAlign: 'center', marginTop: '48px' }}>
                 <Link href="/dashboard" style={{

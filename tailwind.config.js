@@ -29,6 +29,16 @@ module.exports = {
                 "text-muted": "var(--text-muted)",
                 border: "var(--border)",
             },
+            animation: {
+                "spin-slow": "spin 8s linear infinite",
+                "fade": "fade 0.5s ease-out forwards",
+            },
+            keyframes: {
+                fade: {
+                    "0%": { opacity: "0", transform: "translateY(10px)" },
+                    "100%": { opacity: "1", transform: "translateY(0)" },
+                },
+            },
         },
     },
     plugins: [require("tailwindcss-animate")],
