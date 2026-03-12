@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react';
-import { Copy, Check, ChevronRight, ExternalLink, Zap, Shield, Key, Globe, Image, Mic, Brain, AlertTriangle, Layers, Terminal } from 'lucide-react';
+import { Copy, Check, ChevronRight, ExternalLink, Zap, Shield, Key, Globe, Image, Mic, Brain, AlertTriangle, Layers, Terminal, User } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
@@ -70,6 +70,7 @@ function Method({ method }: { method: string }) {
 const sections = [
   { id: 'overview', label: 'Overview', icon: Globe },
   { id: 'auth', label: 'Authentication', icon: Key },
+  { id: 'oauth', label: 'OAuth & Connect', icon: User },
   { id: 'chat', label: 'Chat Completions', icon: Zap },
   { id: 'images', label: 'Images', icon: Image },
   { id: 'audio', label: 'Audio', icon: Mic },
@@ -221,6 +222,64 @@ x-api-key: sk-frenix-YOUR_KEY`} />
             <p className="text-muted-foreground/60 text-sm leading-relaxed opacity-80">
               Keys are generated on the <a href="/api-keys" className="text-foreground font-bold underline decoration-white/20 underline-offset-4 hover:decoration-white/50 transition-all">API Keys</a> dashboard. Keys follow the format <code className="text-foreground/80 font-mono">sk-frenix-*</code>.
             </p>
+          </motion.section>
+
+          <motion.section
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            id="oauth" className="scroll-mt-32 space-y-8">
+            <div className="space-y-4">
+              <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">Sign In with Frenix</h2>
+              <p className="text-muted-foreground/80 text-sm md:text-base leading-relaxed max-w-2xl">
+                Allow your users to authenticate using their Frenix account. Our OAuth 2.1 implementation is secure, fast, and follows industry standards.
+              </p>
+            </div>
+
+            <div className="grid gap-12 pt-4">
+              {/* Step 1 */}
+              <div className="space-y-4 relative pl-8 border-l-2 border-white/5 hover:border-primary/30 transition-colors">
+                <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-background border-2 border-primary/50 shadow-[0_0_10px_rgba(45,212,191,0.3)]" />
+                <div className="flex items-center gap-3">
+                  <Method method="GET" />
+                  <code className="text-xs md:text-sm font-bold text-foreground/60 font-mono">/oauth/authorize</code>
+                </div>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  Redirect users to this endpoint to start the flow. Use your <strong>Client ID</strong> from the dashboard.
+                </p>
+                <CopyBlock lang="text" code={`${GATEWAY.replace('api.', '')}/oauth/authorize?client_id=YOUR_ID&response_type=code&redirect_uri=YOUR_URL&scope=openid+email+profile&state=RANDOM&code_challenge=PKCE&code_challenge_method=S256`} />
+              </div>
+
+              {/* Step 2 */}
+              <div className="space-y-4 relative pl-8 border-l-2 border-white/5 hover:border-primary/30 transition-colors">
+                <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-background border-2 border-white/20" />
+                <div className="flex items-center gap-3">
+                  <Method method="POST" />
+                  <code className="text-xs md:text-sm font-bold text-foreground/60 font-mono">/api/oauth/token</code>
+                </div>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  Exchange the code for tokens. Authenticate using <strong>Basic Auth</strong> (Client ID : Client Secret).
+                </p>
+                <CopyBlock lang="bash" code={`curl -X POST ${GATEWAY}/api/oauth/token \\
+  -H "Authorization: Basic BASE64_CREDS" \\
+  -d "grant_type=authorization_code&code=AUTH_CODE&redirect_uri=CALLBACK_URL&code_verifier=PKCE_VERIFIER"`} />
+              </div>
+
+              {/* Step 3 */}
+              <div className="space-y-4 relative pl-8 border-l-2 border-white/5 hover:border-primary/30 transition-colors">
+                <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-background border-2 border-white/20" />
+                <div className="flex items-center gap-3">
+                  <Method method="GET" />
+                  <code className="text-xs md:text-sm font-bold text-foreground/60 font-mono">/api/oauth/user</code>
+                </div>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  Retrieve the user's verified identity and profile metadata.
+                </p>
+                <CopyBlock lang="bash" code={`curl ${GATEWAY}/api/oauth/user \\
+  -H "Authorization: Bearer ACCESS_TOKEN"`} />
+              </div>
+            </div>
           </motion.section>
 
           {/* ── Chat Completions ────────────────────────── */}

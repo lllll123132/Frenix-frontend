@@ -11,6 +11,14 @@ export async function POST(request: Request) {
   }
 
   const supabase = await createClient();
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
+
+  console.log('[Decision] Attempting decision for user:', user?.email || 'NOT AUTHENTICATED');
+  
+  if (!user) {
+    console.error('[Decision] No active session found');
+    return NextResponse.json({ error: 'Unauthorized. Please sign in.' }, { status: 401 });
+  }
 
   // Handle Mock/Test flow for frontend verification
   if (authorizationId === 'test' || authorizationId === 'preview') {
@@ -25,19 +33,34 @@ export async function POST(request: Request) {
     const { data, error } = await (supabase.auth as any).oauth.approveAuthorization(authorizationId);
 
     if (error) {
+      console.error('[Decision] Approval Error:', error);
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
-    // Redirect back to the client with authorization code
+    console.log('[Decision] Approval Success Data:', data);
+
+    if (!data?.redirect_to) {
+      return NextResponse.json({ 
+        error: 'Invalid session', 
+        details: 'Supabase did not provide a redirect URL. The session might have expired.' 
+      }, { status: 400 });
+    }
+
     return NextResponse.redirect(data.redirect_to);
   } else {
     const { data, error } = await (supabase.auth as any).oauth.denyAuthorization(authorizationId);
 
     if (error) {
+      console.error('[Decision] Denial Error:', error);
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
-    // Redirect back to the client with error
+    console.log('[Decision] Denial Success Data:', data);
+
+    if (!data?.redirect_to) {
+      return NextResponse.json({ error: 'Invalid session' }, { status: 400 });
+    }
+
     return NextResponse.redirect(data.redirect_to);
   }
 }

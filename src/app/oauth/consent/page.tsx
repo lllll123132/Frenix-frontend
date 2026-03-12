@@ -45,6 +45,14 @@ export default async function ConsentPage({
     const response = await (supabase.auth as any).oauth.getAuthorizationDetails(authorizationId);
     authDetails = response.data;
     error = response.error;
+    console.log('[Consent] Auth Details from Supabase:', authDetails);
+
+    // If Supabase already determined the result (e.g. skip consent if previously authorized)
+    // we should redirect immediately instead of showing the UI.
+    if (authDetails?.redirect_url) {
+      console.log('[Consent] Auto-redirecting to:', authDetails.redirect_url);
+      redirect(authDetails.redirect_url);
+    }
   }
 
   if (error || !authDetails) {
@@ -79,7 +87,7 @@ export default async function ConsentPage({
             <div className="w-1.5 h-1.5 rounded-full bg-white" />
           </div>
           <div className="w-16 h-16 rounded-[20px] bg-[#080808] border border-white/5 flex items-center justify-center overflow-hidden shadow-sm">
-            {authDetails.client.logo_url ? (
+            {authDetails?.client?.logo_url ? (
               <img src={authDetails.client.logo_url} alt={authDetails.client.name} className="w-full h-full object-cover" />
             ) : (
               <UserIcon size={24} className="text-white/20" />
@@ -90,7 +98,7 @@ export default async function ConsentPage({
         {/* Minimal Sophisticated Header - Slightly Larger */}
         <div className="text-center mb-12">
           <h1 className="text-3xl font-semibold tracking-tight text-white mb-2.5">
-            Authorize {authDetails.client.name}
+            Authorize {authDetails?.client?.name || 'Connected Application'}
           </h1>
           <p className="text-base text-white/30 font-medium">Connecting your Gateway identity.</p>
         </div>
