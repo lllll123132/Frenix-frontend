@@ -339,7 +339,7 @@ curl ${DASHBOARD}/api/oauth/user \\
                   <div className="overflow-hidden rounded-2xl border border-white/5 bg-black/40">
                     <div className="bg-white/5 px-4 py-2 text-[10px] font-bold text-muted-foreground/60 uppercase tracking-widest">Expected Response</div>
                     <pre className="p-4 text-[12px] text-primary/80 font-mono">
-{\`{
+{`{
   "id": "user_id_uuid",
   "email": "user@example.com",
   "user_metadata": {
@@ -349,7 +349,7 @@ curl ${DASHBOARD}/api/oauth/user \\
   "app_metadata": {
     "provider": "google"
   }
-}\`}
+}`}
                     </pre>
                   </div>
                 </div>
