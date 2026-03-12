@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
 const GATEWAY = process.env.NEXT_PUBLIC_GATEWAY_URL || 'https://api.frenix.sh';
+const DASHBOARD = GATEWAY.replace('api.', 'www.');
 
 function CopyBlock({ code, lang = 'bash' }: { code: string; lang?: string }) {
   const [copied, setCopied] = useState(false);
@@ -229,55 +230,171 @@ x-api-key: sk-frenix-YOUR_KEY`} />
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            id="oauth" className="scroll-mt-32 space-y-8">
+            id="oauth" className="scroll-mt-32 space-y-12">
+            
             <div className="space-y-4">
-              <h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">Sign In with Frenix</h2>
-              <p className="text-muted-foreground/80 text-sm md:text-base leading-relaxed max-w-2xl">
-                Allow your users to authenticate using their Frenix account. Our OAuth 2.1 implementation is secure, fast, and follows industry standards.
+              <h2 className="text-3xl md:text-4xl font-black text-foreground tracking-tight">Sign In with Frenix</h2>
+              <p className="text-muted-foreground/80 text-sm md:text-lg leading-relaxed max-w-2xl">
+                The Frenix Connect protocol allows any application to authenticate users and access their Frenix identities securely. Use our OAuth 2.1 implementation to build seamless integrations.
               </p>
             </div>
 
-            <div className="grid gap-12 pt-4">
-              {/* Step 1 */}
-              <div className="space-y-4 relative pl-8 border-l-2 border-white/5 hover:border-primary/30 transition-colors">
-                <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-background border-2 border-primary/50 shadow-[0_0_10px_rgba(45,212,191,0.3)]" />
-                <div className="flex items-center gap-3">
-                  <Method method="GET" />
-                  <code className="text-xs md:text-sm font-bold text-foreground/60 font-mono">/oauth/authorize</code>
+            {/* --- Integration Steps --- */}
+            <div className="space-y-16">
+              
+              {/* Step 1: Authorization */}
+              <div className="space-y-6">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 border border-primary/30 text-primary font-bold text-xs">1</div>
+                  <h3 className="text-xl font-bold text-foreground">Initiate Authorization</h3>
                 </div>
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  Redirect users to this endpoint to start the flow. Use your <strong>Client ID</strong> from the dashboard.
+                
+                <p className="text-muted-foreground text-sm md:text-base leading-relaxed pl-12">
+                  Construct a URL to redirect the user to. This will trigger the Frenix consent screen where the user can approve your application.
                 </p>
-                <CopyBlock lang="text" code={`${GATEWAY.replace('api.', '')}/oauth/authorize?client_id=YOUR_ID&response_type=code&redirect_uri=YOUR_URL&scope=openid+email+profile&state=RANDOM&code_challenge=PKCE&code_challenge_method=S256`} />
+
+                <div className="pl-12 space-y-4">
+                   <div className="flex items-center gap-3">
+                    <Method method="GET" />
+                    <code className="text-xs md:text-sm font-bold text-foreground/60 font-mono">/oauth/authorize</code>
+                  </div>
+                  <CopyBlock lang="text" code={`${DASHBOARD}/oauth/authorize?
+  client_id=YOUR_CLIENT_ID&
+  response_type=code&
+  redirect_uri=YOUR_CALLBACK_URL&
+  scope=openid+email+profile&
+  state=RANDOM_STATE&
+  code_challenge=S256_CHALLENGE&
+  code_challenge_method=S256`} />
+                  
+                  <div className="bg-white/[0.02] border border-white/5 rounded-2xl p-6 mt-4">
+                    <h4 className="text-xs font-black uppercase tracking-wider text-foreground/40 mb-3">Implementation Tip: PKCE</h4>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      We strictly enforce <strong>Proof Key for Code Exchange (PKCE)</strong>. You must generate a random high-entropy <code className="text-primary italic">code_verifier</code> and its SHA256 <code className="text-primary italic">code_challenge</code> on every login attempt.
+                    </p>
+                  </div>
+                </div>
               </div>
 
-              {/* Step 2 */}
-              <div className="space-y-4 relative pl-8 border-l-2 border-white/5 hover:border-primary/30 transition-colors">
-                <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-background border-2 border-white/20" />
-                <div className="flex items-center gap-3">
-                  <Method method="POST" />
-                  <code className="text-xs md:text-sm font-bold text-foreground/60 font-mono">/api/oauth/token</code>
+              {/* Step 2: Token Exchange */}
+              <div className="space-y-6">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 border border-primary/30 text-primary font-bold text-xs">2</div>
+                  <h3 className="text-xl font-bold text-foreground">Exchange Code for Tokens</h3>
                 </div>
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  Exchange the code for tokens. Authenticate using <strong>Basic Auth</strong> (Client ID : Client Secret).
+
+                <p className="text-muted-foreground text-sm md:text-base leading-relaxed pl-12">
+                  Once the user approves, they'll be redirected back to your <code className="px-1.5 py-0.5 rounded bg-white/5 text-foreground font-mono">redirect_uri</code> with a <code className="text-primary">code</code>. Use this code to perform a server-to-server POST request to retrieve the access token.
                 </p>
-                <CopyBlock lang="bash" code={`curl -X POST ${GATEWAY}/api/oauth/token \\
-  -H "Authorization: Basic BASE64_CREDS" \\
-  -d "grant_type=authorization_code&code=AUTH_CODE&redirect_uri=CALLBACK_URL&code_verifier=PKCE_VERIFIER"`} />
+
+                <div className="pl-12 space-y-4">
+                  <div className="flex items-center gap-3">
+                    <Method method="POST" />
+                    <code className="text-xs md:text-sm font-bold text-foreground/60 font-mono">/api/oauth/token</code>
+                  </div>
+                  
+                  <CopyBlock lang="javascript" code={`// Node.js Example using axios
+const authHeader = Buffer.from(\`\${CLIENT_ID}:\${CLIENT_SECRET}\`).toString('base64');
+
+const response = await axios.post('${DASHBOARD}/api/oauth/token', 
+  new URLSearchParams({
+    grant_type: 'authorization_code',
+    code: authCodeFromRedirect,
+    redirect_uri: YOUR_REDIRECT_URI,
+    code_verifier: YOUR_PKCE_VERIFIER
+  }), 
+  {
+    headers: { 
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': \`Basic \${authHeader}\`
+    }
+  }
+);
+
+const { access_token, refresh_token } = response.data;`} />
+                </div>
               </div>
 
-              {/* Step 3 */}
-              <div className="space-y-4 relative pl-8 border-l-2 border-white/5 hover:border-primary/30 transition-colors">
-                <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-background border-2 border-white/20" />
-                <div className="flex items-center gap-3">
-                  <Method method="GET" />
-                  <code className="text-xs md:text-sm font-bold text-foreground/60 font-mono">/api/oauth/user</code>
+              {/* Step 3: Fetching Identity */}
+              <div className="space-y-6">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 border border-primary/30 text-primary font-bold text-xs">3</div>
+                  <h3 className="text-xl font-bold text-foreground">Access User Profile</h3>
                 </div>
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  Retrieve the user's verified identity and profile metadata.
+
+                <p className="text-muted-foreground text-sm md:text-base leading-relaxed pl-12">
+                  Finally, use the <code className="text-primary italic">access_token</code> to fetch the user's Frenix profile.
                 </p>
-                <CopyBlock lang="bash" code={`curl ${GATEWAY}/api/oauth/user \\
-  -H "Authorization: Bearer ACCESS_TOKEN"`} />
+
+                <div className="pl-12 space-y-4">
+                  <div className="flex items-center gap-3">
+                    <Method method="GET" />
+                    <code className="text-xs md:text-sm font-bold text-foreground/60 font-mono">/api/oauth/user</code>
+                  </div>
+                  
+                  <CopyBlock lang="bash" code={`# Using curl
+curl ${DASHBOARD}/api/oauth/user \\
+  -H "Authorization: Bearer \${ACCESS_TOKEN}"`} />
+
+                  <div className="overflow-hidden rounded-2xl border border-white/5 bg-black/40">
+                    <div className="bg-white/5 px-4 py-2 text-[10px] font-bold text-muted-foreground/60 uppercase tracking-widest">Expected Response</div>
+                    <pre className="p-4 text-[12px] text-primary/80 font-mono">
+{\`{
+  "id": "user_id_uuid",
+  "email": "user@example.com",
+  "user_metadata": {
+    "full_name": "John Doe",
+    "avatar_url": "https://..."
+  },
+  "app_metadata": {
+    "provider": "google"
+  }
+}\`}
+                    </pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* --- Design Your Core --- */}
+            <div className="pt-12 border-t border-white/5">
+              <h3 className="text-sm font-black uppercase tracking-[0.2em] text-foreground/40 italic mb-8 text-center">Standard UI Component</h3>
+              
+              <div className="grid md:grid-cols-2 gap-8 items-center bg-white/[0.02] border border-white/5 rounded-[40px] p-8 md:p-12">
+                <div className="space-y-6">
+                  <h4 className="text-2xl font-black tracking-tight text-foreground">Sign In Button</h4>
+                  <p className="text-muted-foreground text-sm leading-relaxed">
+                    Maintain a premium feel by using our official black-on-white high contrast aesthetics.
+                  </p>
+                  
+                  {/* Visual Example */}
+                  <div className="pt-4">
+                    <button className="px-8 py-4 bg-white text-black rounded-2xl font-black text-sm tracking-tight flex items-center gap-3 hover:scale-[1.02] transition-transform shadow-[0_0_40px_rgba(255,255,255,0.1)]">
+                      <Globe size={18} fill="black" />
+                      Sign In with Frenix
+                    </button>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-widest pl-2">CSS Snippet</div>
+                  <CopyBlock lang="css" code={`.frenix-btn {
+  background: #ffffff;
+  color: #000000;
+  font-weight: 900;
+  border-radius: 12px;
+  padding: 12px 24px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.frenix-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(255,255,255,0.1);
+}`} />
+                </div>
               </div>
             </div>
           </motion.section>
