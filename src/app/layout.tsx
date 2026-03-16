@@ -12,9 +12,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Frenix | The Unified Gateway for Machine Intelligence",
     description: "Access every major LLM through one secure point. Dynamic routing, global edge proxy, and zero client changes.",
-    url: "https://frenix.sh",
+    url: "https://www.frenix.sh",
     siteName: "Frenix",
-    images: [{ url: "https://frenix.sh/og-image.png", width: 1200, height: 630 }],
+    images: [{ url: "https://www.frenix.sh/og-image.png", width: 1200, height: 630 }],
     locale: "en_US",
     type: "website",
   },
@@ -60,7 +60,7 @@ export default function RootLayout({
                 "author": {
                   "@type": "Organization",
                   "name": "Frenix Infrastructure Group",
-                  "url": "https://frenix.sh"
+                  "url": "https://www.frenix.sh"
                 }
               })
             }}

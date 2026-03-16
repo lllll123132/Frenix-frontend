@@ -324,7 +324,7 @@ export default function Home() {
               Pricing
             </h2>
             <p className="text-muted-foreground text-base leading-relaxed max-w-sm">
-              Start free. Scale when you need to.
+              150+ models, completely free. Scale when you need to.
             </p>
           </div>
 
@@ -381,7 +381,7 @@ export default function Home() {
 
             {/* Team */}
             <div className="p-8 md:p-12 bg-white rounded-[40px] flex flex-col relative overflow-hidden group border-[6px] border-primary/20">
-               <div className="absolute top-8 right-8 text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1 bg-black/5 rounded-md text-black/60">High Value</div>
+              <div className="absolute top-8 right-8 text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1 bg-black/5 rounded-md text-black/60">High Value</div>
 
               <span className="text-[10px] font-black uppercase tracking-[0.2em] text-black/40 mb-6">Team Bot</span>
               <div className="flex items-baseline gap-2 mb-4">
@@ -436,28 +436,28 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div className="space-y-4">
-                <h3 className="text-lg font-bold text-foreground">Can I use Frenix as a backup for OpenAI?</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                   Absolutely. Many of our users use Frenix as their primary endpoint with OpenAI as the default model. If OpenAI experiences a regional outage, our gateway can automatically failover to a comparable model (like Claude 3.5 Sonnet or Gemini 1.5 Pro) without you needing to update a single line of code.
-                </p>
+              <h3 className="text-lg font-bold text-foreground">Can I use Frenix as a backup for OpenAI?</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Absolutely. Many of our users use Frenix as their primary endpoint with OpenAI as the default model. If OpenAI experiences a regional outage, our gateway can automatically failover to a comparable model (like Claude 3.5 Sonnet or Gemini 1.5 Pro) without you needing to update a single line of code.
+              </p>
             </div>
             <div className="space-y-4">
-                <h3 className="text-lg font-bold text-foreground">What is the security protocol for my payload?</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                   Frenix implements a zero-retention policy for your data. Your requests are proxied directly to the upstream providers via an encrypted TLS tunnel. We only store anonymized metadata (tokens used, latency, and status) to provide you with comprehensive observability and billing.
-                </p>
+              <h3 className="text-lg font-bold text-foreground">What is the security protocol for my payload?</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Frenix implements a zero-retention policy for your data. Your requests are proxied directly to the upstream providers via an encrypted TLS tunnel. We only store anonymized metadata (tokens used, latency, and status) to provide you with comprehensive observability and billing.
+              </p>
             </div>
             <div className="space-y-4">
-                <h3 className="text-lg font-bold text-foreground">Are there any hidden costs?</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                   No. We pass through the raw provider costs directly. Our revenue comes from our tiered subscription model for features like priority latency and advanced analytics, not by marking up your token consumption.
-                </p>
+              <h3 className="text-lg font-bold text-foreground">Are there any hidden costs?</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                No. We pass through the raw provider costs directly. Our revenue comes from our tiered subscription model for features like priority latency and advanced analytics, not by marking up your token consumption.
+              </p>
             </div>
             <div className="space-y-4">
-                <h3 className="text-lg font-bold text-foreground">How do I integrate Frenix into my existing app?</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                   Integration takes less than 30 seconds. In your OpenAI client library, simply replace the `baseURL` with `https://api.frenix.sh/v1` and use your Frenix API key. Everything else — from chat parameters to response streaming — remains identical.
-                </p>
+              <h3 className="text-lg font-bold text-foreground">How do I integrate Frenix into my existing app?</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Integration takes less than 30 seconds. In your OpenAI client library, simply replace the `baseURL` with `https://api.frenix.sh/v1` and use your Frenix API key. Everything else — from chat parameters to response streaming — remains identical.
+              </p>
             </div>
           </div>
         </section>
@@ -474,13 +474,13 @@ export default function Home() {
               <p className="!text-black/60 text-sm md:text-lg font-medium leading-relaxed max-w-md">
                 Stop managing multiple provider SDKs. Swap your base URL to Frenix and get access to every model from a single key.
               </p>
-              
+
               <div className="mt-8 flex items-center gap-4 border-t border-black/5 pt-8">
-                 <div className="w-10 h-10 rounded-full bg-black/5 flex items-center justify-center font-black text-[10px] text-black/40">FT</div>
-                 <div className="flex flex-col text-left">
-                    <span className="text-[11px] font-black uppercase tracking-widest leading-none">Frenix Engineering</span>
-                    <span className="text-[10px] font-bold text-black/40 uppercase mt-1">Infrastructure Authority</span>
-                 </div>
+                <div className="w-10 h-10 rounded-full bg-black/5 flex items-center justify-center font-black text-[10px] text-black/40">FT</div>
+                <div className="flex flex-col text-left">
+                  <span className="text-[11px] font-black uppercase tracking-widest leading-none">Frenix Engineering</span>
+                  <span className="text-[10px] font-bold text-black/40 uppercase mt-1">Infrastructure Authority</span>
+                </div>
               </div>
             </div>
 
