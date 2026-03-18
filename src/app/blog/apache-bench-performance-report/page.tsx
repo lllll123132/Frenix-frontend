@@ -27,7 +27,7 @@ export default function BenchmarkBlogPage() {
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 }} className="aspect-video rounded-[3rem] bg-gradient-to-br from-blue-600/20 to-indigo-900/40 border border-white/10 flex flex-col items-center justify-center relative overflow-hidden p-8">
              <Activity size={120} className="text-blue-500/30 mb-4" />
              <div className="text-3xl font-mono font-bold text-white/80">Success Rate: 100%</div>
-             <div className="text-xl font-mono text-white/40 mt-2 italic">Verifyed by Apache Bench</div>
+             <div className="text-xl font-mono text-white/40 mt-2 italic">Verified by Apache Bench</div>
           </motion.div>
         </header>
 
