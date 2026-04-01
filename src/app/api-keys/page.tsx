@@ -34,15 +34,15 @@ function ApiKeysSkeleton() {
                 <Skeleton style={{ height: '60px', width: '100%', borderRadius: '10px' }} />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-                <div className="glass-card" style={{ padding: '28px', height: '160px' }}>
-                    <Skeleton style={{ height: '20px', width: '120px', marginBottom: '16px' }} />
-                    <Skeleton style={{ height: '40px', width: '100%', borderRadius: '8px' }} />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div className="glass-card p-7 h-40">
+                    <Skeleton className="h-5 w-28 mb-4" />
+                    <Skeleton className="h-10 w-full rounded-lg" />
                 </div>
-                <div className="glass-card" style={{ padding: '28px', height: '160px' }}>
-                    <Skeleton style={{ height: '20px', width: '120px', marginBottom: '16px' }} />
-                    <div style={{ display: 'flex', gap: '10px' }}>
-                        {[1, 2, 3].map(i => <Skeleton key={i} style={{ height: '24px', width: '60px', borderRadius: '8px' }} />)}
+                <div className="glass-card p-7 h-40">
+                    <Skeleton className="h-5 w-28 mb-4" />
+                    <div className="flex gap-2">
+                        {[1, 2, 3].map(i => <Skeleton key={i} className="h-6 w-14 rounded-lg" />)}
                     </div>
                 </div>
             </div>
@@ -169,15 +169,15 @@ export default function ApiKeys() {
         <div className="dashboard-container">
             {/* Header */}
             <div className="page-header animate-fade">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                     <div>
-                        <h1>API Key</h1>
-                        <p style={{ color: 'var(--text-muted)', marginTop: '4px', fontSize: '14px' }}>
-                            Each account is limited to <strong style={{ color: 'var(--text-main)' }}>one key</strong>. Treat it like a password — it won&apos;t be shown again.
+                        <h1 className="text-2xl md:text-3xl">API Key</h1>
+                        <p className="text-muted-foreground mt-1 text-sm max-w-lg">
+                            Each account is limited to <strong className="text-foreground">one key</strong>. Treat it like a password — it won&apos;t be shown again.
                         </p>
                     </div>
                     {!hasKey && !creating && (
-                        <button className="btn-primary" style={{ padding: '10px 22px', fontSize: '14px' }} onClick={handleCreate} disabled={creating}>
+                        <button className="btn-primary py-2.5 px-6 text-sm" onClick={handleCreate} disabled={creating}>
                             Retry
                         </button>
                     )}
@@ -191,93 +191,147 @@ export default function ApiKeys() {
                 </div>
             )}
 
-            {/* Key Card */}
-            {key ? (
-                <div className="glass-card animate-fade-2" style={{ padding: '32px', marginBottom: '28px' }}>
+            {/* Key Card */}            {key ? (
+                <div className="glass-card animate-fade-2 p-6 md:p-8 mb-7">
                     {key.createdNow && (
-                        <div className="alert alert-success" style={{ marginBottom: '24px' }}>
-                            <Sparkles size={20} style={{ flexShrink: 0, marginTop: '2px' }} />
-                            <div>
+                        <div className="alert alert-success mb-6">
+                            <Sparkles size={20} className="shrink-0 mt-0.5" />
+                            <div className="text-sm">
                                 <strong>Key created!</strong> Copy it now — it will <strong>never be shown again</strong>.
                             </div>
                         </div>
                     )}
 
-                    <table className="data-table">
-                        <thead>
-                            <tr>
-                                <th>Label</th>
-                                <th>Token Identifier</th>
-                                <th>Tier</th>
-                                <th>Status</th>
-                                <th>Account</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td style={{ fontWeight: '600' }}>My Gateway Key</td>
-                                <td>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                        <code style={{ background: 'var(--bg-soft)', padding: '6px 12px', borderRadius: '8px', fontSize: '13px', color: 'var(--text-main)', fontFamily: 'ui-monospace, monospace', letterSpacing: '0.3px', border: '1px solid var(--border)', maxWidth: '340px', overflowX: 'auto', display: 'block', fontWeight: 'bold' }}>
-                                            {key.plainKey ? key.plainKey : `${key.keyPrefix}••••••••••••••••••••`}
-                                        </code>
-                                    </div>
-                                </td>
-                                <td><span className={`badge ${key.tier === 'pro' ? 'badge-warning' : 'badge-success'}`}>{key.tier}</span></td>
-                                <td>
-                                    <span className={`badge ${key.status === 'active' ? 'badge-success' : 'badge-error'}`} style={{ textTransform: 'capitalize' }}>
-                                        {key.status || 'Active'}
-                                    </span>
-                                </td>
-                                <td style={{ color: 'var(--text-muted)', fontSize: '13px' }}>{key.email}</td>
-                                <td>
-                                    <CopyBtn text={key.plainKey || key.keyPrefix} />
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div className="overflow-x-auto -mx-6 md:mx-0">
+                        <div className="inline-block min-w-full align-middle px-6 md:px-0">
+                            <table className="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Label</th>
+                                        <th>Token Identifier</th>
+                                        <th>Tier</th>
+                                        <th>Status</th>
+                                        <th>Account</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td className="font-semibold">My Gateway Key</td>
+                                        <td>
+                                            <div className="flex items-center gap-2">
+                                                <code className="bg-bg-soft px-3 py-1.5 rounded-lg text-[13px] text-foreground font-mono leading-relaxed border border-border max-w-[280px] sm:max-w-xs md:max-w-md overflow-x-auto block font-bold whitespace-nowrap scrollbar-hide">
+                                                    {key.plainKey ? key.plainKey : `${key.keyPrefix}••••••••••••••••••••`}
+                                                </code>
+                                            </div>
+                                        </td>
+                                        <td><span className={`badge ${key.tier === 'pro' ? 'badge-warning' : 'badge-success'}`}>{key.tier}</span></td>
+                                        <td>
+                                            <span className={`badge ${key.status === 'active' ? 'badge-success' : 'badge-error'}`} style={{ textTransform: 'capitalize' }}>
+                                                {key.status || 'Active'}
+                                            </span>
+                                        </td>
+                                        <td className="text-muted-foreground text-[13px]">{key.email}</td>
+                                        <td>
+                                            <CopyBtn text={key.plainKey || key.keyPrefix} />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             ) : (
-                <div className="glass-card animate-fade-2" style={{ padding: '48px', textAlign: 'center', marginBottom: '28px' }}>
-                    <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'center' }}><Key size={40} color="var(--text-muted)" strokeWidth={1.5} /></div>
-                    <h3 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '8px' }}>
+                <div className="glass-card animate-fade-2 p-12 text-center mb-7">
+                    <div className="mb-4 flex justify-center"><Key size={40} className="text-muted-foreground" strokeWidth={1.5} /></div>
+                    <h3 className="text-xl font-bold mb-2">
                         {creating ? 'Generating your key…' : 'Something went wrong'}
                     </h3>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '14px', maxWidth: '400px', margin: '0 auto 28px', lineHeight: '1.6' }}>
+                    <p className="text-muted-foreground text-sm max-w-sm mx-auto mb-7 leading-relaxed">
                         {creating ? 'Hang tight — we\'re setting up your free API key.' : 'Could not create your key automatically. Click retry or check if the gateway is running.'}
                     </p>
                     {!creating && (
-                        <button className="btn-primary" style={{ margin: '0 auto', padding: '12px 36px', fontSize: '15px' }} onClick={handleCreate}>
+                        <button className="btn-primary mx-auto py-3 px-9 text-sm" onClick={handleCreate}>
                             Retry
                         </button>
                     )}
                 </div>
             )}
 
-            {/* Integration Docs */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-                <div className="glass-card animate-fade-3" style={{ padding: '28px' }}>
-                    <h3 style={{ fontSize: '16px', fontWeight: '700', marginBottom: '8px' }}>REST API</h3>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '13px', lineHeight: '1.6', marginBottom: '18px' }}>
-                        Pass your key as a Bearer token to any endpoint.
-                    </p>
-                    <div className="code-block">
-                        <div><span style={{ color: '#60a5fa' }}>POST</span> {process.env.NEXT_PUBLIC_GATEWAY_URL || 'http://localhost:4000'}/v1/chat/completions</div>
-                        <div style={{ color: '#475569' }}>Authorization: Bearer sk-frenix-…</div>
+            {/* Integration Docs & Cross-Device Sync */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-12">
+                {/* Sync Section */}
+                <div className="glass-card animate-fade-3 p-7 flex flex-col justify-between border-primary/20 bg-primary/[0.02]">
+                    <div>
+                        <div className="flex items-center gap-2 mb-2">
+                            <h3 className="text-base font-bold">Cross-Device Sync</h3>
+                            <span className="px-1.5 py-0.5 rounded-md bg-primary/20 text-[9px] font-black uppercase text-primary">Beta</span>
+                        </div>
+                        <p className="text-muted-foreground text-[13px] leading-relaxed mb-5">
+                            Already have a key? Enter your email to pull your identity and stats to this device.
+                        </p>
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-2">
+                        <input 
+                            type="email" 
+                            id="sync-email"
+                            placeholder="your@email.com"
+                            className="flex-1 bg-bg-soft border border-border px-4 py-2 rounded-xl text-sm outline-none focus:border-primary/50 transition-all"
+                            defaultValue={user?.email || ''}
+                        />
+                        <button 
+                            onClick={async () => {
+                                const email = (document.getElementById('sync-email') as HTMLInputElement).value;
+                                if (!email) return toast.error('Email is required');
+                                setCreating(true);
+                                try {
+                                    const res = await fetch('/api/gateway/keys', { 
+                                        method: 'POST', 
+                                        headers: { 'Content-Type': 'application/json' }, 
+                                        body: JSON.stringify({ email }) 
+                                    });
+                                    if (res.ok) {
+                                        const data = await res.json();
+                                        setKey({ plainKey: data.key, keyPrefix: data.key.substring(0, 20), tier: data.tier, email: data.email, status: 'active', createdNow: false });
+                                        setHasKey(true);
+                                        toast.success('Identity synced successfully!');
+                                    } else {
+                                        toast.error('Identity not found or error syncing.');
+                                    }
+                                } catch {
+                                    toast.error('Connection failed.');
+                                } finally {
+                                    setCreating(false);
+                                }
+                            }}
+                            className="btn-primary py-2 px-6 text-xs whitespace-nowrap"
+                        >
+                            Sync Identity
+                        </button>
                     </div>
                 </div>
 
-                <div className="glass-card animate-fade-3" style={{ padding: '28px' }}>
-                    <h3 style={{ fontSize: '16px', fontWeight: '700', marginBottom: '8px' }}>Compatible With</h3>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '13px', lineHeight: '1.6', marginBottom: '18px' }}>
-                        Works with any OpenAI-compatible client — just swap the base URL.
+                <div className="glass-card animate-fade-3 p-7">
+                    <h3 className="text-base font-bold mb-2">REST API</h3>
+                    <p className="text-muted-foreground text-[13px] leading-relaxed mb-5">
+                        Pass your key as a Bearer token to any endpoint.
                     </p>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                        {['OpenAI SDK', 'LangChain', 'LlamaIndex', 'curl', 'Axios', 'httpx'].map(lib => (
-                            <span key={lib} style={{ padding: '4px 12px', borderRadius: '8px', background: 'var(--bg-soft)', border: '1px solid var(--border)', fontSize: '12px', fontWeight: '500' }}>{lib}</span>
-                        ))}
+                    <div className="code-block text-[11px] sm:text-xs overflow-hidden">
+                        <div className="truncate"><span className="text-blue-400">POST</span> {process.env.NEXT_PUBLIC_GATEWAY_URL || 'http://localhost:4000'}/v1/chat/completions</div>
+                        <div className="text-muted-foreground/60 truncate">Authorization: Bearer sk-frenix-…</div>
                     </div>
+                </div>
+            </div>
+
+            <div className="glass-card animate-fade-3 p-7 mb-12">
+                <h3 className="text-base font-bold mb-2">Compatible With</h3>
+                <p className="text-muted-foreground text-[13px] leading-relaxed mb-5">
+                    Works with any OpenAI-compatible client — just swap the base URL.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                    {['OpenAI SDK', 'LangChain', 'LlamaIndex', 'curl', 'Axios', 'httpx'].map(lib => (
+                        <span key={lib} className="px-3 py-1 rounded-lg bg-bg-soft border border-border text-[11px] font-bold">{lib}</span>
+                    ))}
                 </div>
             </div>
         </div>

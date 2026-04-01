@@ -247,13 +247,13 @@ export default function Dashboard() {
         <div className="min-h-screen">
             <DynamicBackground />
             
-            <div className="dashboard-container max-w-7xl mx-auto py-12 px-6 space-y-8 animate-fade h-full">
+            <div className="dashboard-container max-w-7xl mx-auto py-8 md:py-12 px-4 sm:px-6 space-y-8 animate-fade h-full">
                 
                 {/* Header */}
-                <div className="flex justify-between items-end border-b border-white/5 pb-8">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-white/5 pb-8 gap-6">
                     <div className="space-y-1">
                         <div className="flex items-center gap-2">
-                             <h1 className="text-3xl font-black tracking-tighter">GATEWAY V2</h1>
+                             <h1 className="text-2xl md:text-3xl font-black tracking-tighter">GATEWAY V2</h1>
                              {isDecrypted && (
                                  <motion.div 
                                     initial={{ scale: 0 }}
@@ -264,19 +264,19 @@ export default function Dashboard() {
                                  </motion.div>
                              )}
                         </div>
-                        <p className="text-[11px] font-bold text-muted-foreground/60 uppercase tracking-widest">
+                        <p className="text-[10px] md:text-[11px] font-bold text-muted-foreground/60 uppercase tracking-widest">
                             Enterprise Orchestration & Analytics
                         </p>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 w-full md:w-auto justify-end">
                         <motion.button 
                             whileTap={{ scale: 0.95 }}
                             onClick={() => loadData()}
-                            className="p-2.5 rounded-xl bg-white/5 border border-white/5 text-muted-foreground hover:text-primary transition-colors"
+                            className="flex-1 md:flex-none flex items-center justify-center p-2.5 rounded-xl bg-white/5 border border-white/5 text-muted-foreground hover:text-primary transition-colors"
                         >
                             <RefreshCw size={18} className={loading ? "animate-spin" : ""} />
                         </motion.button>
-                        <Link href="/billing" className="p-2.5 rounded-xl bg-white/5 border border-white/5 text-muted-foreground hover:text-foreground transition-colors">
+                        <Link href="/billing" className="flex-1 md:flex-none flex items-center justify-center p-2.5 rounded-xl bg-white/5 border border-white/5 text-muted-foreground hover:text-foreground transition-colors">
                             <Settings size={18} />
                         </Link>
                     </div>

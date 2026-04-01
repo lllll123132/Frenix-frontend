@@ -155,9 +155,9 @@ export default function ModelsPage() {
     const displayedModels = filteredModels.slice(0, visibleCount);
 
     return (
-        <div className="flex h-[calc(100vh-56px)] bg-black text-white font-sans overflow-hidden">
+        <div className="flex flex-col lg:flex-row h-[calc(100vh-56px)] bg-black text-white font-sans overflow-hidden">
             {/* Left Sidebar */}
-            <aside className="w-[240px] border-r border-[#151515] flex flex-col pt-4 px-2 shrink-0 overflow-y-auto">
+            <aside className="hidden lg:flex w-[240px] border-r border-[#151515] flex-col pt-4 px-2 shrink-0 overflow-y-auto">
                 <div className="py-4 space-y-6">
                     <section className="space-y-1">
                         <header className="px-3 text-[10px] font-bold text-zinc-600 uppercase tracking-widest mb-2 flex items-center justify-between">
@@ -216,7 +216,7 @@ export default function ModelsPage() {
 
             {/* Main Content Area */}
             <main className="flex-1 flex flex-col pt-4 overflow-y-auto no-scrollbar">
-                <div className="w-full px-12 py-4">
+                <div className="w-full px-4 sm:px-8 lg:px-12 py-4">
                     {/* Top Header */}
                     <div className="flex flex-col gap-6 mb-8">
                         <div className="flex items-center justify-between">
@@ -320,30 +320,30 @@ export default function ModelsPage() {
                                                 <Copy size={12} className="opacity-0 group-hover/id:opacity-100 transition-opacity" />
                                             </div>
 
-                                            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[11px] font-bold text-zinc-600 uppercase tracking-wider">
+                                            <div className="flex flex-wrap items-center gap-x-4 gap-y-3 md:gap-x-6 text-[10px] sm:text-[11px] font-bold text-zinc-600 uppercase tracking-wider">
                                                 <div className="flex items-center gap-1">
-                                                    <span>By {model.owned_by.toLowerCase()}</span>
+                                                    <span className="truncate max-w-[100px] sm:max-w-none">By {model.owned_by.toLowerCase()}</span>
                                                     <button onClick={(e) => { e.stopPropagation(); copyToClipboard(model.id); }}>
                                                         {copiedId === model.id ? <Check size={10} className="text-green-500" /> : <Copy size={10} className="hover:text-white" />}
                                                     </button>
                                                 </div>
-                                                <div className="w-1 h-1 rounded-full bg-zinc-800" />
-                                                <span>{new Date(model.created * 1000).toLocaleDateString()}</span>
-                                                <div className="w-1 h-1 rounded-full bg-zinc-800" />
+                                                <div className="hidden sm:block w-1 h-1 rounded-full bg-zinc-800" />
+                                                <span className="hidden sm:inline">{new Date(model.created * 1000).toLocaleDateString()}</span>
+                                                <div className="hidden sm:block w-1 h-1 rounded-full bg-zinc-800" />
                                                 <span>1M context</span>
                                                 <div className="w-1 h-1 rounded-full bg-zinc-800" />
                                                 {price ? (
-                                                    <>
+                                                    <div className="flex flex-wrap items-center gap-2">
                                                         {price.type === 'tokens' ? (
                                                             <>
-                                                                <span className="text-zinc-500">${price.input}/M <span className="text-zinc-800 italic">tokens</span></span>
-                                                                <div className="w-1 h-1 rounded-full bg-zinc-800" />
-                                                                <span className="text-zinc-500">${price.output}/M <span className="text-zinc-800 italic">tokens</span></span>
+                                                                <span className="text-zinc-500 whitespace-nowrap">${price.input}/M <span className="text-zinc-800 italic">in</span></span>
+                                                                <div className="w-0.5 h-3 bg-zinc-800/40" />
+                                                                <span className="text-zinc-500 whitespace-nowrap">${price.output}/M <span className="text-zinc-800 italic">out</span></span>
                                                             </>
                                                         ) : (
                                                             <span className="text-zinc-500">${price.price} / {price.type}</span>
                                                         )}
-                                                    </>
+                                                    </div>
                                                 ) : <span className="text-primary italic">Inquiry for rates</span>}
                                             </div>
                                         </motion.div>

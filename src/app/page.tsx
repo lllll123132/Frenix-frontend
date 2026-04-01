@@ -117,30 +117,19 @@ export default function Home() {
               Operational
             </div>
 
-            <h1 className="text-[2.2rem] md:text-[3.2rem] lg:text-[3.8rem] text-foreground tracking-tight leading-[1.1] font-extrabold mb-6">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.8rem] text-foreground tracking-tight leading-[1.1] font-extrabold mb-6">
               The unified gateway{' '}
               <span className="text-muted-foreground font-bold">for machine intelligence.</span>
             </h1>
 
-            <p style={{
-              color: 'var(--text-muted)',
-              fontSize: '15px',
-              lineHeight: '1.6',
-              fontWeight: '400',
-              maxWidth: '400px',
-              marginBottom: '28px',
-            }}>
+            <p className="text-sm md:text-[15px] text-muted-foreground leading-relaxed max-w-[400px] mb-7 font-medium">
               Access 150+ LLMs through a single endpoint. Route across OpenAI, Anthropic, Google, and more — no client changes needed.
             </p>
 
-            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
-              <Link href="/dashboard" className="btn-primary" style={{
-                padding: '12px 28px',
-                gap: '8px',
-                fontSize: '14px',
-              }}>
+            <div className="flex flex-wrap gap-3 items-center">
+              <Link href="/dashboard" className="btn-primary py-3 px-7 gap-2 text-sm">
                 Get started
-                <ArrowRight size={15} strokeWidth={2} />
+                <ArrowRight size={15} strokeWidth={2.5} />
               </Link>
 
               <button
@@ -156,20 +145,20 @@ export default function Home() {
             </div>
 
             {/* Partner Logos */}
-            <div className="mt-12 flex items-center gap-8 opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500">
-              <span className="text-[10px] uppercase tracking-widest font-bold whitespace-nowrap">Integrated with:</span>
-              <div className="flex items-center gap-6">
+            <div className="mt-10 flex flex-wrap items-center gap-6 opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500">
+              <span className="text-[10px] uppercase tracking-widest font-black whitespace-nowrap">Integrated with:</span>
+              <div className="flex flex-wrap items-center gap-5 sm:gap-8">
                 <div className="flex items-center gap-2">
-                  <OpenAIIcon size={18} />
-                  <span className="text-xs font-bold">OpenAI</span>
+                  <OpenAIIcon size={16} />
+                  <span className="text-[11px] font-bold">OpenAI</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <AnthropicIcon size={18} />
-                  <span className="text-xs font-bold">Anthropic</span>
+                  <AnthropicIcon size={16} />
+                  <span className="text-[11px] font-bold">Anthropic</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <GoogleIcon size={18} />
-                  <span className="text-xs font-bold">Google</span>
+                  <GoogleIcon size={16} />
+                  <span className="text-[11px] font-bold">Google</span>
                 </div>
               </div>
             </div>
@@ -329,8 +318,8 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="w-full lg:w-[450px] aspect-square rounded-[3rem] bg-black/40 border border-white/10 p-2 overflow-hidden shadow-2xl">
-                <div className="w-full h-full bg-[#0a0a0a] rounded-[2.5rem] p-8 font-mono text-[11px] leading-tight text-white/40 overflow-hidden">
+              <div className="w-full lg:w-[450px] aspect-square rounded-[2rem] sm:rounded-[3rem] bg-black/40 border border-white/10 p-1 sm:p-2 overflow-hidden shadow-2xl">
+                <div className="w-full h-full bg-[#0a0a0a] rounded-[1.8rem] sm:rounded-[2.5rem] p-5 sm:p-8 font-mono text-[10px] sm:text-[11px] leading-tight text-white/40 overflow-x-auto whitespace-nowrap custom-scrollbar">
                   <p className="text-blue-400 mb-4">$ ab -n 100 -c 10 http://api.frenix.sh/v1/chat</p>
                   <p>Benchmarking api.frenix.sh (be patient).....done</p>
                   <p className="mt-4 text-white/80">Server Software:        Frenix-Gateway/2.1.0</p>
