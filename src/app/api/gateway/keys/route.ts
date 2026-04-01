@@ -35,11 +35,10 @@ export async function POST(req: NextRequest) {
         name: user.user_metadata?.full_name || user.user_metadata?.name || user.email.split('@')[0],
     };
 
-    const email = sessionUser.email;
+    const body = await req.json().catch(() => ({}));
+    const email = body.email || sessionUser.email;
 
     const cookieStore = await cookies();
-
-    const body = await req.json().catch(() => ({}));
 
     try {
         // First check if the user already has a key via the backend

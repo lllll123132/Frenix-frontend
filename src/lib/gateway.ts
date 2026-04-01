@@ -65,7 +65,22 @@ export async function fetchStats(apiKey: string): Promise<GatewayStats> {
 
 // ─── Fetch key info by email (Dashboard fallback) ───────────────────────────
 
-export async function fetchStatsByEmail(email: string): Promise<GatewayStats> {
+export function decryptGatewayPayload(encoded: string): any {
+    const KEY = 'frenix-v2-gateway-secure-payload';
+    try {
+        const decoded = atob(encoded);
+        let result = '';
+        for (let i = 0; i < decoded.length; i++) {
+            result += String.fromCharCode(decoded.charCodeAt(i) ^ KEY.charCodeAt(i % KEY.length));
+        }
+        return JSON.parse(decodeURIComponent(result));
+    } catch (e) {
+        console.error('Failed to decrypt gateway payload:', e);
+        return null;
+    }
+}
+
+export async function fetchStatsByEmail(email: string): Promise<GatewayStats | any> {
     const res = await fetch(`${BASE}/v1/keys/email/${encodeURIComponent(email)}`, {
         headers: SERVICE_KEY ? { Authorization: `Bearer ${SERVICE_KEY}` } : {},
         cache: 'no-store',
@@ -76,7 +91,11 @@ export async function fetchStatsByEmail(email: string): Promise<GatewayStats> {
         throw new Error(body.message || `HTTP ${res.status}`);
     }
 
-    return res.json();
+    const data = await res.json();
+    if (data.encrypted && data.payload) {
+        return decryptGatewayPayload(data.payload);
+    }
+    return data;
 }
 
 // ─── Create a new key for a user ─────────────────────────────────────────────
