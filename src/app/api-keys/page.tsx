@@ -258,56 +258,16 @@ export default function ApiKeys() {
                 </div>
             )}
 
-            {/* Integration Docs & Cross-Device Sync */}
+            {/* Integration Docs */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-12">
-                {/* Sync Section */}
-                <div className="glass-card animate-fade-3 p-7 flex flex-col justify-between border-primary/20 bg-primary/[0.02]">
-                    <div>
-                        <div className="flex items-center gap-2 mb-2">
-                            <h3 className="text-base font-bold">Cross-Device Sync</h3>
-                            <span className="px-1.5 py-0.5 rounded-md bg-primary/20 text-[9px] font-black uppercase text-primary">Beta</span>
-                        </div>
-                        <p className="text-muted-foreground text-[13px] leading-relaxed mb-5">
-                            Already have a key? Enter your email to pull your identity and stats to this device.
-                        </p>
-                    </div>
-                    <div className="flex flex-col sm:flex-row gap-2">
-                        <input 
-                            type="email" 
-                            id="sync-email"
-                            placeholder="your@email.com"
-                            className="flex-1 bg-bg-soft border border-border px-4 py-2 rounded-xl text-sm outline-none focus:border-primary/50 transition-all"
-                            defaultValue={user?.email || ''}
-                        />
-                        <button 
-                            onClick={async () => {
-                                const email = (document.getElementById('sync-email') as HTMLInputElement).value;
-                                if (!email) return toast.error('Email is required');
-                                setCreating(true);
-                                try {
-                                    const res = await fetch('/api/gateway/keys', { 
-                                        method: 'POST', 
-                                        headers: { 'Content-Type': 'application/json' }, 
-                                        body: JSON.stringify({ email }) 
-                                    });
-                                    if (res.ok) {
-                                        const data = await res.json();
-                                        setKey({ plainKey: data.key, keyPrefix: data.key.substring(0, 20), tier: data.tier, email: data.email, status: 'active', createdNow: false });
-                                        setHasKey(true);
-                                        toast.success('Identity synced successfully!');
-                                    } else {
-                                        toast.error('Identity not found or error syncing.');
-                                    }
-                                } catch {
-                                    toast.error('Connection failed.');
-                                } finally {
-                                    setCreating(false);
-                                }
-                            }}
-                            className="btn-primary py-2 px-6 text-xs whitespace-nowrap"
-                        >
-                            Sync Identity
-                        </button>
+                <div className="glass-card animate-fade-3 p-7 border-primary/20 bg-primary/[0.01]">
+                    <h3 className="text-base font-bold mb-2">Internal Node Sync</h3>
+                    <p className="text-muted-foreground text-[13px] leading-relaxed mb-5">
+                        Your identity and encryption keys are automatically synchronized across all your devices using your authenticated session.
+                    </p>
+                    <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-500/5 border border-emerald-500/10 w-fit">
+                        <div className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                        <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500/80">Active & Secured</span>
                     </div>
                 </div>
 
