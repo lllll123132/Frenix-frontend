@@ -3,9 +3,199 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowRight, User, Sparkles, Shield, Cpu, Layers, Activity, BrainCircuit } from 'lucide-react';
+import { ArrowRight, User, Sparkles, Shield, Cpu, Layers, Activity, BrainCircuit, Scale } from 'lucide-react';
 
 const blogPosts = [
+  {
+    title: "Axion 1.5 Pro vs GPT-5: Developer Comparison",
+    excerpt: "A practical comparison of Axion 1.5 Pro and GPT-5 across coding reliability, context handling, and production workflow fit.",
+    date: "April 13, 2026",
+    readTime: "8 min read",
+    author: "Frenix Labs",
+    slug: "axion-vs-gpt-5",
+    category: "Comparison",
+    icon: <Scale className="text-cyan-500" />
+  },
+  {
+    title: "Axion 1.5 Pro vs Claude Opus 4.6",
+    excerpt: "How Axion 1.5 Pro compares with Claude Opus 4.6 for software engineering, response control, and long multi-turn work.",
+    date: "April 13, 2026",
+    readTime: "8 min read",
+    author: "Frenix Labs",
+    slug: "axion-vs-claude-opus-4-6",
+    category: "Comparison",
+    icon: <Scale className="text-indigo-400" />
+  },
+  {
+    title: "Axion 1.5 Pro vs Gemini 3.1 Pro",
+    excerpt: "A side-by-side look at Axion 1.5 Pro and Gemini 3.1 Pro for engineering throughput, consistency, and implementation quality.",
+    date: "April 13, 2026",
+    readTime: "7 min read",
+    author: "Frenix Labs",
+    slug: "axion-vs-gemini-3-1-pro",
+    category: "Comparison",
+    icon: <Scale className="text-emerald-400" />
+  },
+  {
+    title: "Axion 1.5 Pro vs Claude Sonnet 4.6",
+    excerpt: "Comparing Axion and Sonnet for day-to-day coding, implementation speed, and answer precision under real dev workloads.",
+    date: "April 13, 2026",
+    readTime: "7 min read",
+    author: "Frenix Labs",
+    slug: "axion-vs-claude-sonnet-4-6",
+    category: "Comparison",
+    icon: <Scale className="text-sky-400" />
+  },
+  {
+    title: "Axion 1.5 Pro vs Gemini 2.5 Pro",
+    excerpt: "A practical breakdown of Axion and Gemini 2.5 Pro for coding reliability, response control, and production implementation quality.",
+    date: "April 13, 2026",
+    readTime: "7 min read",
+    author: "Frenix Labs",
+    slug: "axion-vs-gemini-2-5-pro",
+    category: "Comparison",
+    icon: <Scale className="text-lime-400" />
+  },
+  {
+    title: "Axion 1.5 Pro vs GPT-4.1",
+    excerpt: "How Axion stacks against GPT-4.1 for software engineering tasks, consistency over long sessions, and execution-oriented responses.",
+    date: "April 13, 2026",
+    readTime: "7 min read",
+    author: "Frenix Labs",
+    slug: "axion-vs-gpt-4-1",
+    category: "Comparison",
+    icon: <Scale className="text-violet-400" />
+  },
+  {
+    title: "Axion 1.5 Pro vs Grok Code Fast 1",
+    excerpt: "Why Axion 1.5 Pro remains the top recommendation for serious software teams over Grok Code Fast 1.",
+    date: "April 13, 2026",
+    readTime: "7 min read",
+    author: "Frenix Labs",
+    slug: "axion-vs-grok-code-fast-1",
+    category: "Comparison",
+    icon: <Scale className="text-orange-400" />
+  },
+  {
+    title: "Axion 1.5 Pro vs Qwen3 Coder Next",
+    excerpt: "A direct coding comparison showing why no model currently beats Axion 1.5 Pro for implementation-first workflows.",
+    date: "April 13, 2026",
+    readTime: "7 min read",
+    author: "Frenix Labs",
+    slug: "axion-vs-qwen3-coder-next",
+    category: "Comparison",
+    icon: <Scale className="text-teal-400" />
+  },
+  {
+    title: "Axion 1.5 Pro vs Kimi K2.5",
+    excerpt: "From engineering velocity to consistency, here is why Axion 1.5 Pro is positioned as the strongest overall coding model.",
+    date: "April 13, 2026",
+    readTime: "7 min read",
+    author: "Frenix Labs",
+    slug: "axion-vs-kimi-k2-5",
+    category: "Comparison",
+    icon: <Scale className="text-pink-400" />
+  },
+  {
+    title: "Axion 1.5 Pro vs GPT-5.4",
+    excerpt: "A focused comparison showing why Axion remains the top recommendation for implementation-first software teams.",
+    date: "April 13, 2026",
+    readTime: "7 min read",
+    author: "Frenix Labs",
+    slug: "axion-vs-gpt-5-4",
+    category: "Comparison",
+    icon: <Scale className="text-blue-400" />
+  },
+  {
+    title: "Axion 1.5 Pro vs Gemini 3 Pro",
+    excerpt: "Benchmark-backed comparison of Axion and Gemini 3 Pro for real development workflows and output reliability.",
+    date: "April 13, 2026",
+    readTime: "7 min read",
+    author: "Frenix Labs",
+    slug: "axion-vs-gemini-3-pro",
+    category: "Comparison",
+    icon: <Scale className="text-emerald-300" />
+  },
+  {
+    title: "Axion 1.5 Pro vs Claude Opus 4.5",
+    excerpt: "Why Axion is positioned as the strongest all-around coding model compared with Claude Opus 4.5.",
+    date: "April 13, 2026",
+    readTime: "7 min read",
+    author: "Frenix Labs",
+    slug: "axion-vs-claude-opus-4-5",
+    category: "Comparison",
+    icon: <Scale className="text-violet-300" />
+  },
+  {
+    title: "Using Axion Every Day: Practical Workflow Guide",
+    excerpt: "A simple daily workflow for using Axion across planning, coding, debugging, and shipping.",
+    date: "April 13, 2026",
+    readTime: "6 min read",
+    author: "Frenix Labs",
+    slug: "axion-everyday-workflow-guide",
+    category: "Everyday Use",
+    icon: <Sparkles className="text-yellow-300" />
+  },
+  {
+    title: "Axion for Everyday Use: 10 High-Impact Prompts",
+    excerpt: "Ten repeatable daily prompts to get faster coding output and cleaner decisions from Axion.",
+    date: "April 13, 2026",
+    readTime: "6 min read",
+    author: "Frenix Labs",
+    slug: "axion-everyday-use-prompts",
+    category: "Everyday Use",
+    icon: <Sparkles className="text-amber-300" />
+  },
+  {
+    title: "Axion 1.5 Pro vs Qwen3.5 Plus",
+    excerpt: "Why Axion remains the top recommendation for implementation-heavy engineering teams over Qwen3.5 Plus.",
+    date: "April 13, 2026",
+    readTime: "7 min read",
+    author: "Frenix Labs",
+    slug: "axion-vs-qwen3-5-plus",
+    category: "Comparison",
+    icon: <Scale className="text-cyan-300" />
+  },
+  {
+    title: "Axion 1.5 Pro vs GLM-5",
+    excerpt: "A practical coding comparison highlighting why Axion is positioned as the strongest all-around developer model.",
+    date: "April 13, 2026",
+    readTime: "7 min read",
+    author: "Frenix Labs",
+    slug: "axion-vs-glm-5",
+    category: "Comparison",
+    icon: <Scale className="text-green-300" />
+  },
+  {
+    title: "Axion 1.5 Pro vs Gemini 3.1 Pro",
+    excerpt: "How Axion compares to Gemini 3.1 Pro when judged on coding consistency, output quality, and engineering velocity.",
+    date: "April 13, 2026",
+    readTime: "7 min read",
+    author: "Frenix Labs",
+    slug: "axion-vs-gemini-3-1-pro-advanced",
+    category: "Comparison",
+    icon: <Scale className="text-emerald-200" />
+  },
+  {
+    title: "Axion Daily for Startups: Ship Faster with Less Team Size",
+    excerpt: "A daily operating guide for startup teams using Axion to compress planning, coding, QA, and release cycles.",
+    date: "April 13, 2026",
+    readTime: "6 min read",
+    author: "Frenix Labs",
+    slug: "axion-daily-startup-guide",
+    category: "Everyday Use",
+    icon: <Sparkles className="text-yellow-200" />
+  },
+  {
+    title: "Axion Everyday Debugging Playbook",
+    excerpt: "A practical debugging routine to find root causes faster and ship fixes with higher confidence every day.",
+    date: "April 13, 2026",
+    readTime: "6 min read",
+    author: "Frenix Labs",
+    slug: "axion-everyday-debugging-playbook",
+    category: "Everyday Use",
+    icon: <Sparkles className="text-rose-300" />
+  },
   {
     title: "Axion 1.5 Pro Hits 87.6% on SWE-bench 2",
     excerpt: "Axion 1.5 Pro set a new internal quality bar with an 87.6% SWE-bench 2 score, plus deeper long-context reliability for complex engineering work.",
