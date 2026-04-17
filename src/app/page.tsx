@@ -115,7 +115,7 @@ export default function Home() {
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
               </span>
               <span className="text-[10px] font-black text-white/70 tracking-[0.2em] uppercase group-hover:text-white transition-colors">Operational</span>
-            </Link>
+            </a>
 
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.8rem] text-foreground tracking-tight leading-[1.1] font-extrabold mb-6">
               The unified gateway{' '}
