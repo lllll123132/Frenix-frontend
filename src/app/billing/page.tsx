@@ -127,21 +127,21 @@ export default function BillingPage() {
                                 {currentTier === 'free' && (
                                     <Button 
                                         onClick={() => {
-                                            toast('💳 Upgrade Instructions', {
+                                            toast.error('Registration Paused', {
                                                 description: (
                                                     <div className="mt-2 text-xs space-y-3">
-                                                        <div className="p-3 bg-white/5 rounded-lg border border-white/10">
-                                                            <p className="font-bold text-white mb-1">For Indians:</p>
-                                                            <p className="text-muted-foreground">Pay Here: <span className="text-primary font-mono select-all">7206347667@fam</span></p>
-                                                            <p className="text-muted-foreground mt-1 text-[10px]">Then send a request to Telegram: <span className="text-primary font-bold">@itsmehiren</span></p>
+                                                        <div className="p-3 bg-red-500/10 rounded-lg border border-red-500/20">
+                                                            <p className="font-bold text-white mb-1">Seats Currently Full!</p>
+                                                            <p className="text-muted-foreground">Due to high demand, we have temporarily paused automated upgrades.</p>
                                                         </div>
                                                         <div className="p-3 bg-white/5 rounded-lg border border-white/10">
-                                                            <p className="font-bold text-white mb-1">International:</p>
-                                                            <p className="text-muted-foreground">Ask admin at: <span className="text-primary font-bold">@itsmehiren</span></p>
+                                                            <p className="font-bold text-white mb-1">How to join?</p>
+                                                            <p className="text-muted-foreground">Please DM our administrator directly to get on the waitlist or for manual activation.</p>
+                                                            <p className="text-primary font-bold mt-2">Telegram: @itsmehiren</p>
                                                         </div>
                                                     </div>
                                                 ),
-                                                duration: 10000,
+                                                duration: 6000,
                                             });
                                         }}
                                         className="w-full h-14 rounded-2xl bg-primary text-primary-foreground font-black text-sm tracking-widest uppercase hover:opacity-95 transition-opacity"
@@ -179,23 +179,20 @@ export default function BillingPage() {
                                     </li>
                                 ))}
                             </ul>
-                            <Button 
+                             <Button 
                                 onClick={() => {
-                                    toast('💳 Upgrade Instructions', {
+                                    toast.error('Registration Paused', {
                                         description: (
                                             <div className="mt-2 text-xs space-y-3">
-                                                <div className="p-3 bg-white/5 rounded-lg border border-white/10">
-                                                    <p className="font-bold text-white mb-1">For Indians:</p>
-                                                    <p className="text-muted-foreground">Pay Here: <span className="text-primary font-mono select-all">7206347667@fam</span></p>
-                                                    <p className="text-muted-foreground mt-1 text-[10px]">Then send a request to Telegram: <span className="text-primary font-bold">@itsmehiren</span></p>
+                                                <div className="p-3 bg-red-500/10 rounded-lg border border-red-500/20">
+                                                    <p className="font-bold text-white mb-1">Seats Full!</p>
                                                 </div>
                                                 <div className="p-3 bg-white/5 rounded-lg border border-white/10">
-                                                    <p className="font-bold text-white mb-1">International:</p>
-                                                    <p className="text-muted-foreground">Ask admin at: <span className="text-primary font-bold">@itsmehiren</span></p>
+                                                    <p className="text-muted-foreground">DM specifically to <span className="text-primary font-bold">@itsmehiren</span> on Telegram for upgrade.</p>
                                                 </div>
                                             </div>
                                         ),
-                                        duration: 10000,
+                                        duration: 6000,
                                     });
                                 }}
                                 className="w-full h-12 rounded-xl bg-white/5 border border-white/10 text-foreground font-black text-[10px] uppercase tracking-[0.2em] hover:bg-white/10 transition-colors"

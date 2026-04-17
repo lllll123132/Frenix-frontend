@@ -104,18 +104,18 @@ export default function Home() {
 
           {/* Left */}
           <div style={{ zIndex: 2 }}>
-            <div style={{
-              display: 'inline-flex', alignItems: 'center', gap: '6px',
-              padding: '5px 14px', borderRadius: '8px',
-              background: 'var(--bg-soft)',
-              color: 'var(--text-muted)',
-              marginBottom: '32px',
-              border: '1px solid var(--border)',
-              fontSize: '11px', fontWeight: '600', letterSpacing: '0.3px',
-            }}>
-              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#22c55e' }} />
-              Operational
-            </div>
+            <a 
+              href="https://status.frenix.sh"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 mb-6 hover:bg-white/10 transition-colors group"
+            >
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              <span className="text-[10px] font-black text-white/70 tracking-[0.2em] uppercase group-hover:text-white transition-colors">Operational</span>
+            </Link>
 
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.8rem] text-foreground tracking-tight leading-[1.1] font-extrabold mb-6">
               The unified gateway{' '}
@@ -421,21 +421,21 @@ export default function Home() {
 
               <button 
                 onClick={() => {
-                  toast('💳 Upgrade Instructions', {
+                  toast.error('Registration Paused', {
                     description: (
                       <div className="mt-2 text-xs space-y-3">
-                        <div className="p-3 bg-white/5 rounded-lg border border-white/10">
-                          <p className="font-bold text-white mb-1">For Indians:</p>
-                          <p className="text-muted-foreground">Pay Here: <span className="text-primary font-mono select-all">7206347667@fam</span></p>
-                          <p className="text-muted-foreground mt-1 text-[10px]">Then send a request to Telegram: <span className="text-primary font-bold">@itsmehiren</span></p>
+                        <div className="p-3 bg-red-500/10 rounded-lg border border-red-500/20">
+                          <p className="font-bold text-white mb-1">Seats Currently Full!</p>
+                          <p className="text-muted-foreground">Due to high demand, we have temporarily paused automated upgrades.</p>
                         </div>
                         <div className="p-3 bg-white/5 rounded-lg border border-white/10">
-                          <p className="font-bold text-white mb-1">International:</p>
-                          <p className="text-muted-foreground">Ask admin at: <span className="text-primary font-bold">@itsmehiren</span></p>
+                          <p className="font-bold text-white mb-1">How to join?</p>
+                          <p className="text-muted-foreground">Please DM our administrator directly to get on the waitlist or for manual activation.</p>
+                          <p className="text-primary font-bold mt-2">Telegram: @itsmehiren</p>
                         </div>
                       </div>
                     ),
-                    duration: 10000,
+                    duration: 6000,
                   });
                 }}
                 className="w-full h-14 rounded-2xl bg-primary text-black flex items-center justify-center font-bold text-sm tracking-widest uppercase hover:opacity-90 transition-all"

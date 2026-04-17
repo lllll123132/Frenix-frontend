@@ -83,19 +83,26 @@ export function Header({ links, user, onSignOut }: HeaderProps) {
                     <FrenixLogo />
                 </Link>
                 <div className="hidden items-center gap-0.5 md:flex">
-                    {navLinks.map((link, i) => (
-                        <Link
-                            key={i}
-                            className={cn(
-                                buttonVariants({ variant: 'ghost', size: 'sm' }),
-                                'text-xs font-semibold h-8 px-3',
-                                pathname === link.href && 'bg-accent',
-                            )}
-                            href={link.href}
-                        >
-                            {link.label}
-                        </Link>
-                    ))}
+                    {navLinks.map((link, i) => {
+                        const isExternal = link.href.startsWith('http');
+                        const Component = isExternal ? 'a' : Link;
+                        const extraProps = isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {};
+                        
+                        return (
+                            <Component
+                                key={i}
+                                className={cn(
+                                    buttonVariants({ variant: 'ghost', size: 'sm' }),
+                                    'text-xs font-semibold h-8 px-3',
+                                    !isExternal && pathname === link.href && 'bg-accent',
+                                )}
+                                href={link.href}
+                                {...extraProps}
+                            >
+                                {link.label}
+                            </Component>
+                        );
+                    })}
                     <div className="flex items-center gap-0.5 ml-2 mr-1 p-0.5 rounded-[10px] bg-white/[0.03] border border-white/5 shadow-inner">
                         <Link
                             href="/docs"
@@ -171,19 +178,26 @@ export function Header({ links, user, onSignOut }: HeaderProps) {
 
                     <div className="space-y-1">
                         <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 mb-3 px-4">Navigation</p>
-                        {navLinks.map((link) => (
-                            <Link
-                                key={link.label}
-                                className={cn(
-                                    'flex items-center rounded-xl px-4 py-3 text-[15px] font-bold transition-all',
-                                    pathname === link.href ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:bg-white/5 hover:text-foreground',
-                                )}
-                                href={link.href}
-                                onClick={() => setOpen(false)}
-                            >
-                                {link.label}
-                            </Link>
-                        ))}
+                        {navLinks.map((link) => {
+                            const isExternal = link.href.startsWith('http');
+                            const Component = isExternal ? 'a' : Link;
+                            const extraProps = isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {};
+                            
+                            return (
+                                <Component
+                                    key={link.label}
+                                    className={cn(
+                                        'flex items-center rounded-xl px-4 py-3 text-[15px] font-bold transition-all',
+                                        !isExternal && pathname === link.href ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:bg-white/5 hover:text-foreground',
+                                    )}
+                                    href={link.href}
+                                    onClick={() => setOpen(false)}
+                                    {...extraProps}
+                                >
+                                    {link.label}
+                                </Component>
+                            );
+                        })}
                     </div>
 
                     {user && (

@@ -51,7 +51,9 @@ export default function ModelsPage() {
                 }
 
                 const [modelsRes, pricingRes] = await Promise.allSettled([
-                    fetch(`${normalizedUrl}/v1/models`),
+                    fetch('https://api.frenix.sh/v1/models', {
+                        headers: { 'Authorization': 'Bearer frenix-models-status' }
+                    }),
                     fetch(`${normalizedUrl}/v1/pricing`)
                 ]);
 

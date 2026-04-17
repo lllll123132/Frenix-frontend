@@ -45,6 +45,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     const navLinks = [
         { label: 'Dashboard', href: '/dashboard' },
         { label: 'Models', href: '/models' },
+        { label: 'Status', href: 'https://status.frenix.sh' },
         { label: 'Pricing', href: '/#pricing' },
         { label: 'Blog', href: '/blog' },
     ];
@@ -107,7 +108,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
                             <Link href="/terms" className="hover-text-primary">Terms of service</Link>
                             <Link href="/privacy" className="hover-text-primary">Privacy policy</Link>
                             <Link href="/refund" className="hover-text-primary">Refund policy</Link>
-                            <Link href="/status" className="hover-text-primary">Status</Link>
+                            <a href="https://status.frenix.sh" target="_blank" rel="noopener noreferrer" className="hover-text-primary">Status</a>
                             <a href="mailto:support@frenix.sh" className="hover-text-primary">Contact support</a>
                         </div>
                     </div>
