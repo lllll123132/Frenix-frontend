@@ -53,8 +53,8 @@ const MetaIcon = ({ size = 17 }: { size?: number }) => (
   </svg>
 );
 
-const UserIcon = ({ size = 17 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+const UserIcon = ({ size = 17, className }: { size?: number; className?: string }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
     <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
     <circle cx="12" cy="7" r="4" />
   </svg>
@@ -415,20 +415,20 @@ export default function Home() {
             </p>
 
             <div className="flex flex-wrap gap-3 items-center">
-              <Link href="/dashboard" className="h-16 px-12 rounded-2xl bg-white text-black flex items-center justify-center font-black text-[13px] tracking-[0.2em] uppercase hover:opacity-90 hover:scale-[1.05] active:scale-[0.98] transition-all duration-300 shadow-xl shadow-white/10 group">
+              <Link href="/dashboard" className="h-12 px-7 rounded-xl bg-white text-black flex items-center justify-center font-bold text-[13px] hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-xl shadow-white/5 group">
                 Get started
-                <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" strokeWidth={3} />
+                <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" strokeWidth={2.5} />
               </Link>
 
               <button
-                className="h-16 px-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center font-mono text-[14px] text-white/60 hover:bg-white/10 hover:border-white/20 transition-all active:scale-[0.98]"
+                className="h-12 px-6 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center font-mono text-[13px] text-white/60 hover:bg-white/10 hover:border-white/20 transition-all active:scale-[0.98]"
                 onClick={() => {
                   navigator.clipboard.writeText('api.frenix.sh/v1');
                   toast.success('Endpoint copied');
                 }}
               >
                 <span className="mr-3">api.frenix.sh/v1</span>
-                <Copy size={16} strokeWidth={2} style={{ opacity: 0.4 }} />
+                <Copy size={14} strokeWidth={2} style={{ opacity: 0.4 }} />
               </button>
             </div>
 
