@@ -532,7 +532,6 @@ export default function Home() {
               {
                 name: "Unified Endpoint",
                 description: "One request, total control. Query every major model provider through a single REST interface without changing your workflow or adding redundant SDKs.",
-                Icon: Zap,
                 background: (
                   <div className="absolute inset-0 opacity-40 group-hover:opacity-60 transition-opacity">
                     <UnifiedEndpointBeam />
@@ -543,7 +542,6 @@ export default function Home() {
               {
                 name: "All Models Support",
                 description: "Access text, image, and video generation models. GPT-4, Claude, Gemini, DALL-E, Stable Diffusion, and more—all through one unified API.",
-                Icon: Globe,
                 background: (
                   <div className="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none">
                     <div className="relative size-full flex items-center justify-center translate-y-[10%]">
@@ -576,7 +574,6 @@ export default function Home() {
               {
                 name: "Real-time Analytics",
                 description: "Monitor your API usage, track costs, and analyze performance with our comprehensive dashboard and analytics.",
-                Icon: TrendingUp,
                 background: (
                   <div className="absolute inset-0 flex items-center justify-center opacity-20 group-hover:opacity-40 transition-opacity">
                     <svg width="100%" height="100%" viewBox="0 0 400 200" className="px-8">
@@ -591,7 +588,6 @@ export default function Home() {
               {
                 name: "Streaming Responses",
                 description: "Get real-time streaming responses for chat applications. Reduce perceived latency and improve user experience.",
-                Icon: Terminal,
                 background: (
                   <div className="absolute inset-0 flex flex-col justify-center gap-4 px-12 opacity-30 group-hover:opacity-50 transition-opacity">
                     <div className="h-8 w-2/3 bg-white/10 rounded-full self-end" />
