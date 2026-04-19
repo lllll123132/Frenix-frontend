@@ -3,6 +3,7 @@ import "./globals.css";
 import { Providers } from "@/components/Providers";
 import LayoutWrapper from "@/components/LayoutWrapper";
 import { Toaster } from "@/components/ui/sonner";
+import ClickSpark from "@/components/ui/ClickSpark";
 
 export const metadata: Metadata = {
   title: "Frenix | Premium AI Gateway & LLM Orchestration",
@@ -44,12 +45,21 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
       </head>
       <body>
-        <Providers>
-          <div className="gradient-bg" />
-          <Toaster position="top-right" richColors />
-          <LayoutWrapper>
-            {children}
-          </LayoutWrapper>
+        <ClickSpark
+          sparkColor='#fff'
+          sparkSize={10}
+          sparkRadius={15}
+          sparkCount={8}
+          duration={400}
+        >
+          <Providers>
+            <div className="gradient-bg" />
+            <Toaster position="top-right" richColors />
+            <LayoutWrapper>
+              {children}
+            </LayoutWrapper>
+          </Providers>
+        </ClickSpark>
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{
@@ -116,7 +126,6 @@ export default function RootLayout({
               })
             }}
           />
-        </Providers>
       </body>
     </html>
   );
