@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { toast } from 'sonner';
 import CountUp from '@/components/ui/CountUp';
-import { ArrowRight, Copy, TrendingUp, Zap, Shield, Globe, Check, Terminal, ArrowUpRight } from 'lucide-react';
+import { ArrowRight, Copy, TrendingUp, Zap, Shield, Check, Terminal, ArrowUpRight } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import ClickSpark from '@/components/ui/ClickSpark';
@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/accordion";
 import { ClientTweetCard } from "@/components/ui/tweet-card";
 import { Marquee } from "@/components/ui/marquee";
+import { GlobePulse } from "@/components/ui/cobe-globe-pulse";
 
 // Lightweight inline provider icons (replaces heavy @lobehub/icons barrel export)
 const GoogleIcon = ({ size = 17 }: { size?: number }) => (
@@ -155,91 +156,91 @@ const testimonials = [
     name: "Raj Patel",
     role: "Founder & CEO",
     content: "As a startup, we needed an API that could scale. <span class='text-sky-400 font-extrabold'>Frenix delivered exactly that.</span> Production record time.",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Raj"
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&h=150&auto=format&fit=crop"
   },
   {
     name: "Linda Wu",
     role: "VP Engineering",
     content: "Frenix's reliability is unmatched. <span class='text-sky-400 font-extrabold'>99.99% uptime</span> with sub-100ms latency. Perfect for production workloads.",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Linda"
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&h=150&auto=format&fit=crop"
   },
   {
     name: "Emily Chen",
     role: "Product Manager",
     content: "The multilingual capabilities are incredible. <span class='text-sky-400 font-extrabold'>12 languages, one API.</span> A global must-have.",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Emily"
+    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=150&h=150&auto=format&fit=crop"
   },
   {
     name: "Alex Rivera",
     role: "CTO @ Innovate",
     content: "Frenix changed our development. <span class='text-sky-400 font-extrabold'>Shipped 10x faster</span> than expected. Intuitive API.",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Alex"
+    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=150&h=150&auto=format&fit=crop"
   },
   {
     name: "Michael Brown",
     role: "Data Scientist",
     content: "Accuracy is remarkable. <span class='text-sky-400 font-extrabold'>Tools are 95% accurate.</span> Transformative for finance.",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Michael"
+    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=150&h=150&auto=format&fit=crop"
   },
   {
     name: "Samantha Lee",
     role: "Lead Developer",
     content: "Seamless integration. <span class='text-sky-400 font-extrabold'>80% faster response times.</span> Satisfaction soared!",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Samantha"
+    avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=150&h=150&auto=format&fit=crop"
   },
   {
     name: "Jake Morrison",
     role: "CTO @ SecureNet",
     content: "Enterprise-grade features. <span class='text-sky-400 font-extrabold'>Key rotation & audit logs.</span> Absolute trust.",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Jake"
+    avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=150&h=150&auto=format&fit=crop"
   },
   {
     name: "Nadia Ali",
     role: "Product Lead",
     content: "Top-notch DevX. <span class='text-sky-400 font-extrabold'>Excellent SDKs & support.</span> A joy for any team.",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Nadia"
+    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&h=150&auto=format&fit=crop"
   },
   {
     name: "Sofia Patel",
     role: "CEO @ EduTech",
     content: "Powers our learning platform. <span class='text-sky-400 font-extrabold'>300% engagement boost.</span> One API call at a time.",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sofia"
+    avatar: "https://images.unsplash.com/photo-1531123897727-8f129e16fd3c?q=80&w=150&h=150&auto=format&fit=crop"
   },
   {
     name: "Marcus Thorne",
     role: "Infrastructure Lead",
     content: "<span class='text-sky-400 font-extrabold'>Zero-retention policy</span> is a game changer for our compliance teams. Elite security.",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Marcus"
+    avatar: "https://images.unsplash.com/photo-1552058544-f2b08422138a?q=80&w=150&h=150&auto=format&fit=crop"
   },
   {
     name: "Elena Rossi",
     role: "AI Architect",
     content: "The <span class='text-sky-400 font-extrabold'>Unified Gateway</span> simplifies everything. No more SDK spaghetti.",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Elena"
+    avatar: "https://images.unsplash.com/photo-1548142813-c348350df52b?q=80&w=150&h=150&auto=format&fit=crop"
   },
   {
     name: "Jordan Smith",
     role: "Fullstack Dev",
     content: "Switched in 5 minutes. <span class='text-sky-400 font-extrabold'>Infrastructure that just works.</span> Highly recommend.",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Jordan"
+    avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=150&h=150&auto=format&fit=crop"
   },
   {
     name: "Sarah Jenkins",
     role: "Growth Eng",
     content: "Scalability at its peak. <span class='text-sky-400 font-extrabold'>Handled 50M requests</span> without breaking a sweat.",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah"
+    avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=150&h=150&auto=format&fit=crop"
   },
   {
     name: "David Kim",
     role: "Backend Wizard",
     content: "Frenix is the <span class='text-sky-400 font-extrabold'>gold standard</span> for AI orchestration. Pure technical excellence.",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=David"
+    avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=150&h=150&auto=format&fit=crop"
   },
   {
     name: "Lisa Wong",
     role: "SRE @ FutureScale",
     content: "Our failover logic is now redundant. <span class='text-sky-400 font-extrabold'>Frenix handles everything natively.</span>",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Lisa"
+    avatar: "https://images.unsplash.com/photo-1520813792240-56fc4a3765a7?q=80&w=150&h=150&auto=format&fit=crop"
   }
 ];
 
@@ -586,13 +587,13 @@ export default function Home() {
                 className: "lg:col-span-1 lg:row-span-1",
               },
               {
-                name: "Streaming Responses",
-                description: "Get real-time streaming responses for chat applications. Reduce perceived latency and improve user experience.",
+                name: "Ultra low latency",
+                description: "Sub-millisecond routing overhead ensures your AI applications respond at the speed of thought, powered by our global edge network.",
                 background: (
-                  <div className="absolute inset-0 flex flex-col justify-center gap-4 px-12 opacity-30 group-hover:opacity-50 transition-opacity">
-                    <div className="h-8 w-2/3 bg-white/10 rounded-full self-end" />
-                    <div className="h-8 w-1/2 bg-white/20 rounded-full self-start" />
-                    <div className="h-8 w-3/4 bg-white/5 rounded-full border border-white/10 flex items-center justify-center text-[10px] font-bold uppercase tracking-widest text-white/40">Add Task</div>
+                  <div className="absolute inset-0 flex items-center justify-center opacity-75 group-hover:opacity-100 transition-all duration-500 pointer-events-none overflow-hidden">
+                     <div className="translate-y-[30%] scale-[1.5]">
+                        <GlobePulse className="w-[400px] h-[400px]" />
+                     </div>
                   </div>
                 ),
                 className: "lg:col-span-1 lg:row-span-1",
