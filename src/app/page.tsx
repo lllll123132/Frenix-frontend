@@ -529,7 +529,6 @@ export default function Home() {
         sparkColor="#ffffff"
         sparkSize={10}
         sparkRadius={15}
-        sparkSpeed={10}
         sparkCount={8}
         duration={400}
       />
