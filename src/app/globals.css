@@ -4,6 +4,7 @@
 
 /* ─── Design Tokens (Neutral) ──────────────────────────────────────── */
 :root {
+  --font-bebas: 'Bebas Neue', sans-serif;
   --background: #ffffff;
   --foreground: #0a0a0a;
   --primary: #171717;
@@ -139,7 +140,12 @@ body {
   background: var(--bg);
 }
 
-body,
+body {
+  color: var(--text-main);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
 h1,
 h2,
 h3,
@@ -147,8 +153,9 @@ h4,
 h5,
 h6 {
   color: var(--text-main);
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: var(--font-bebas);
   -webkit-font-smoothing: antialiased;
+  letter-spacing: 0.05em !important;
 }
 
 a {

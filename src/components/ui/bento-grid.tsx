@@ -48,10 +48,10 @@ const BentoCard = ({
   <div
     key={name}
     className={cn(
-      "group relative col-span-1 flex flex-col justify-between overflow-hidden rounded-[2.5rem] min-h-[480px]",
-      // static premium styles
-      "bg-white/[0.02] border border-white/5",
-      "dark:[box-shadow:0_-20px_80px_-20px_#ffffff0a_inset]",
+      "group relative col-span-1 flex flex-col justify-between overflow-hidden rounded-[2.5rem] min-h-[320px] md:min-h-[360px]",
+      // premium light mode styles
+      "bg-white border border-slate-200",
+      "shadow-[0_8px_30px_rgb(0,0,0,0.04)]",
       className
     )}
     {...props}
@@ -60,14 +60,14 @@ const BentoCard = ({
     <div className="p-8 z-10 flex flex-col justify-end h-full">
       <div className="pointer-events-none flex transform-gpu flex-col gap-2 transition-all duration-500">
         {Icon && (
-          <div className="size-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-6">
-             <Icon className={cn("h-7 w-7", iconClassName || "text-white/70")} />
+          <div className="size-14 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center mb-6">
+             <Icon className={cn("h-7 w-7 text-slate-900", iconClassName)} />
           </div>
         )}
-        <h3 className="text-2xl md:text-3xl font-black text-white tracking-tight uppercase">
+        <h3 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight uppercase">
           {name}
         </h3>
-        <p className="max-w-lg text-white/40 text-base font-medium leading-relaxed">{description}</p>
+        <p className="max-w-lg text-slate-600 text-base font-semibold leading-relaxed">{description}</p>
       </div>
     </div>
   </div>

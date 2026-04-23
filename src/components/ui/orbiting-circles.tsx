@@ -11,6 +11,7 @@ export interface OrbitingCirclesProps extends React.HTMLAttributes<HTMLDivElemen
   path?: boolean
   iconSize?: number
   speed?: number
+  angleOffset?: number
 }
 
 export function OrbitingCircles({
@@ -22,6 +23,7 @@ export function OrbitingCircles({
   path = true,
   iconSize = 30,
   speed = 1,
+  angleOffset = 0,
   ...props
 }: OrbitingCirclesProps) {
   const calculatedDuration = duration / speed
@@ -34,7 +36,7 @@ export function OrbitingCircles({
           className="pointer-events-none absolute inset-0 size-full"
         >
           <circle
-            className="stroke-black/10 stroke-1 dark:stroke-white/5"
+            className="stroke-black/20 stroke-[1.5px]"
             cx="50%"
             cy="50%"
             r={radius}
@@ -42,10 +44,13 @@ export function OrbitingCircles({
           />
         </svg>
       )}
-      {React.Children.map(children, (child, index) => {
-        const angle = (360 / React.Children.count(children)) * index
+      {React.Children.toArray(children)
+        .filter(React.isValidElement)
+        .map((child, index, validChildren) => {
+        const angle = (360 / validChildren.length) * index + angleOffset
         return (
           <div
+            key={index}
             style={
               {
                 "--duration": calculatedDuration,
