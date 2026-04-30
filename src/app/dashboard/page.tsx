@@ -337,7 +337,7 @@ export default function Dashboard() {
                                 <div className="group/item flex items-center justify-between p-4 bg-white/[0.03] rounded-2xl border border-white/5 hover:border-white/10 transition-all">
                                     <div className="flex flex-col">
                                         <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 mb-1">Authenticated Account</span>
-                                        <span className="text-xs font-bold truncate max-w-[180px]">{user?.email}</span>
+                                        <span className="text-xs font-bold truncate max-w-[180px]">{user?.primaryEmailAddress?.emailAddress || "User"}</span>
                                     </div>
                                     <Link href="/account" className="p-2 rounded-lg bg-white/5 opacity-0 group-hover/item:opacity-100 transition-opacity"><ExternalLink size={12} /></Link>
                                 </div>
