@@ -30,8 +30,8 @@ export function Header({ links, onSignOut }: HeaderProps) {
     const { signOut, openUserProfile, redirectToSignIn } = useClerk();
 
     const userData = clerkUser ? {
-        name: `${clerkUser.firstName || ''} ${clerkUser.lastName || ''}`.trim() || clerkUser.emailAddresses[0]?.emailAddress?.split('@')[0] || "User",
-        username: clerkUser.username || clerkUser.emailAddresses[0]?.emailAddress || "@frenix_user",
+        name: `${clerkUser.firstName || ''} ${clerkUser.lastName || ''}`.trim() || clerkUser.emailAddresses?.[0]?.emailAddress?.split('@')[0] || "User",
+        username: clerkUser.username || clerkUser.emailAddresses?.[0]?.emailAddress || "@frenix_user",
         avatar: clerkUser.imageUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${clerkUser.id}`,
         initials: (clerkUser.firstName?.[0] || clerkUser.lastName?.[0] || "U").toUpperCase(),
     } : null;
