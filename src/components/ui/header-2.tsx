@@ -211,22 +211,32 @@ export function Header({ links, onSignOut }: HeaderProps) {
                                     setShowProfile(true);
                                 }},
                             ].map((item) => {
-                                const isLink = 'href' in item;
-                                const Component = isLink ? Link : 'button';
-                                const props = isLink ? { href: item.href } : { onClick: () => { setOpen(false); item.action(); } };
+                                if ('href' in item && item.href) {
+                                    return (
+                                        <Link
+                                            key={item.label}
+                                            href={item.href}
+                                            onClick={() => setOpen(false)}
+                                            className={cn(
+                                                'flex w-full items-center gap-3 rounded-xl px-4 py-3 text-[15px] font-bold transition-all',
+                                                pathname === item.href ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:bg-white/5 hover:text-foreground',
+                                            )}
+                                        >
+                                            <Icon icon={item.icon} className="size-5 opacity-60" />
+                                            {item.label}
+                                        </Link>
+                                    );
+                                }
 
                                 return (
-                                    <Component
+                                    <button
                                         key={item.label}
-                                        {...props}
-                                        className={cn(
-                                            'flex w-full items-center gap-3 rounded-xl px-4 py-3 text-[15px] font-bold transition-all',
-                                            isLink && pathname === item.href ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:bg-white/5 hover:text-foreground',
-                                        )}
+                                        onClick={() => { setOpen(false); item.action?.(); }}
+                                        className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-[15px] font-bold transition-all text-muted-foreground hover:bg-white/5 hover:text-foreground"
                                     >
                                         <Icon icon={item.icon} className="size-5 opacity-60" />
                                         {item.label}
-                                    </Component>
+                                    </button>
                                 );
                             })}
                         </div>
