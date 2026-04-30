@@ -1,41 +1,25 @@
 'use client'
 
+import { useUser, useClerk } from '@clerk/nextjs';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
 import { Header } from '@/components/ui/header-2';
 
 export default function LayoutWrapper({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const router = useRouter();
+    const { user, isLoaded, isSignedIn } = useUser();
+    const { signOut } = useClerk();
+
     const isLanding = pathname === '/';
     const isAuth = pathname.startsWith('/api/auth') || pathname === '/signin' || pathname === '/oauth/consent';
     const isRestrictedPath = pathname.startsWith('/admin') || pathname.startsWith('/team');
 
-    const [user, setUser] = useState<any>(null);
-    const [status, setStatus] = useState<'loading' | 'authenticated' | 'unauthenticated'>('loading');
-    const supabase = createClient();
-
-    useEffect(() => {
-        const getUser = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            setUser(user);
-            setStatus(user ? 'authenticated' : 'unauthenticated');
-        };
-
-        getUser();
-
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-            setUser(session?.user ?? null);
-            setStatus(session?.user ? 'authenticated' : 'unauthenticated');
-        });
-
-        return () => subscription.unsubscribe();
-    }, []);
+    const status = !isLoaded ? 'loading' : isSignedIn ? 'authenticated' : 'unauthenticated';
 
     const handleSignOut = async () => {
-        await supabase.auth.signOut();
+        await signOut();
         router.refresh();
         router.push('/');
     };
@@ -56,8 +40,6 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
         <div style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column' }}>
             <Header
                 links={navLinks}
-                user={status === 'authenticated' ? user : null}
-                onSignOut={handleSignOut}
             />
 
             <div style={{ height: '56px' }} aria-hidden="true" />

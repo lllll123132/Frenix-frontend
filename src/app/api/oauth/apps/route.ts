@@ -1,11 +1,11 @@
-import { createClient, createAdminClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
+import { auth, currentUser } from '@clerk/nextjs/server';
 
 export async function GET() {
   try {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const { userId } = await auth();
+    if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const adminSupabase = await createAdminClient();
     if (!adminSupabase) throw new Error('Failed to initialize Admin Supabase client');
@@ -14,7 +14,7 @@ export async function GET() {
     const { data: apps, error } = await adminSupabase
       .from('oauth_apps')
       .select('*')
-      .eq('user_id', user.id);
+      .eq('user_id', userId);
 
     if (error) {
       console.error('Supabase Query Error:', error);
@@ -37,9 +37,8 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  const { userId } = await auth();
+  if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const body = await req.json();
   const { name, redirect_uris, logo_url } = body;
@@ -65,7 +64,7 @@ export async function POST(req: Request) {
   const { data: appMapping, error: mapError } = await adminSupabase
     .from('oauth_apps')
     .insert({
-      user_id: user.id,
+      user_id: userId,
       client_id: client.client_id,
       name,
       logo_url: logo_url || null,

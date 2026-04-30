@@ -1,28 +1,29 @@
-import { type NextRequest, NextResponse } from 'next/server'
-import { updateSession } from '@/lib/supabase/middleware'
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-const PUBLIC_PATHS = ['/', '/signin', '/auth', '/docs', '/status', '/not-found', '/admin', '/team', '/oauth', '/api']
+const isPublicRoute = createRouteMatcher([
+  '/', 
+  '/signin(.*)', 
+  '/auth(.*)', 
+  '/docs(.*)', 
+  '/status(.*)', 
+  '/api(.*)', 
+  '/admin(.*)', 
+  '/team(.*)', 
+  '/oauth(.*)',
+  '/#pricing'
+]);
 
-export default async function middleware(request: NextRequest) {
-    const { pathname } = request.nextUrl
-
-    const isPublic = PUBLIC_PATHS.some(p =>
-        pathname === p || pathname.startsWith(p + '/')
-    )
-    const isApi = pathname.startsWith('/api/')
-    const isStatic = pathname.startsWith('/_next/') || pathname.includes('.')
-
-    if (isStatic) return NextResponse.next()
-
-    if (isPublic || isApi) {
-        return await updateSession(request)
-    }
-
-    return await updateSession(request)
-}
+export default clerkMiddleware(async (auth, request) => {
+  if (!isPublicRoute(request)) {
+    await auth.protect();
+  }
+});
 
 export const config = {
-    matcher: [
-        '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
-    ],
-}
+  matcher: [
+    // Skip Next.js internals and all static files, unless found in search params
+    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest|riv)).*)',
+    // Always run for API routes
+    '/(api|trpc)(.*)',
+  ],
+};

@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { Shield, Lock, ArrowRight, User as UserIcon, Check, BadgeCheck } from 'lucide-react';
 import Link from 'next/link';
+import { currentUser } from '@clerk/nextjs/server';
 
 export default async function ConsentPage({
   searchParams,
@@ -19,15 +20,13 @@ export default async function ConsentPage({
     );
   }
 
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await currentUser();
 
   if (!user) {
     redirect(`/signin?redirect=/oauth/consent?authorization_id=${authorizationId}`);
   }
+
+  const supabase = await createClient();
 
   let authDetails = null;
   let error = null;
@@ -63,9 +62,9 @@ export default async function ConsentPage({
     );
   }
 
-  const userMeta = user.user_metadata || {};
-  const fullName = userMeta.full_name || user.email?.split('@')[0] || 'User';
-  const avatarUrl = userMeta.avatar_url;
+  const userEmail = user.emailAddresses[0]?.emailAddress || 'User';
+  const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || userEmail.split('@')[0];
+  const avatarUrl = user.imageUrl;
 
   return (
     <div className="h-screen w-screen bg-black text-white font-sans selection:bg-primary/20 flex flex-col items-center justify-center overflow-hidden p-8">
@@ -119,7 +118,7 @@ export default async function ConsentPage({
             </div>
             <div className="flex-1">
               <h2 className="text-lg font-semibold text-white leading-none mb-1.5">{fullName}</h2>
-              <p className="text-sm text-white/20 font-medium truncate italic">{user.email}</p>
+              <p className="text-sm text-white/20 font-medium truncate italic">{userEmail}</p>
             </div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-white/[0.03] border border-white/[0.05]">
               <BadgeCheck size={13} className="text-primary/60" />

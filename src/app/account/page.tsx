@@ -1,6 +1,6 @@
 'use client'
 
-import { createClient } from '@/lib/supabase/client';
+import { useUser, useClerk } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
@@ -8,9 +8,8 @@ import Link from 'next/link';
 import { User, Mail, AtSign, BadgeCheck, ShieldCheck, Camera, Code2, Plus, Globe, Trash2, Key, ExternalLink, Copy, Check } from 'lucide-react';
 
 export default function AccountPage() {
-    const supabase = createClient();
     const router = useRouter();
-    const [user, setUser] = useState<any>(null);
+    const { user, isLoaded, isSignedIn } = useUser();
     const [loading, setLoading] = useState(true);
     const [updating, setUpdating] = useState(false);
 
@@ -33,26 +32,21 @@ export default function AccountPage() {
     const [copiedSecret, setCopiedSecret] = useState<string | null>(null);
 
     useEffect(() => {
-        const checkUser = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) {
+        if (isLoaded) {
+            if (!isSignedIn) {
                 router.push('/signin');
                 return;
             }
-            setUser(user);
-
-            // Hydrate fields from user_metadata
-            const meta = user.user_metadata || {};
-            setFirstName(meta.first_name || meta.full_name?.split(' ')[0] || '');
-            setLastName(meta.last_name || meta.full_name?.split(' ').slice(1).join(' ') || '');
-            setUsername(meta.user_name || user.email?.split('@')[0] || '');
-            setAvatarUrl(meta.avatar_url || '');
+            
+            setFirstName(user.firstName || '');
+            setLastName(user.lastName || '');
+            setUsername(user.username || user.emailAddresses[0]?.emailAddress?.split('@')[0] || '');
+            setAvatarUrl(user.imageUrl || '');
 
             setLoading(false);
-        };
-        checkUser();
-        fetchOAuthApps();
-    }, [router]);
+            fetchOAuthApps();
+        }
+    }, [isLoaded, isSignedIn, router]);
 
     const fetchOAuthApps = async () => {
         setLoadingApps(true);
@@ -117,25 +111,18 @@ export default function AccountPage() {
 
     const handleUpdate = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!user) return;
         setUpdating(true);
 
-        const { error } = await supabase.auth.updateUser({
-            data: {
-                full_name: `${firstName} ${lastName}`.trim(),
-                first_name: firstName,
-                last_name: lastName,
-                user_name: username,
-                avatar_url: avatarUrl
-            }
-        });
-
-        if (error) {
-            toast.error(error.message);
-        } else {
+        try {
+            await user.update({
+                firstName,
+                lastName,
+                username: username || undefined,
+            });
             toast.success('Profile updated successfully');
-            // Refresh local state
-            const { data: { user: updated } } = await supabase.auth.getUser();
-            setUser(updated);
+        } catch (error: any) {
+            toast.error(error.errors?.[0]?.message || 'Update failed');
         }
         setUpdating(false);
     };
@@ -287,7 +274,7 @@ export default function AccountPage() {
                                 border: '1px solid var(--border)'
                             }}>
                                 <Mail size={14} color="var(--text-muted)" />
-                                <span style={{ color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.email}</span>
+                                <span style={{ color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user?.emailAddresses[0]?.emailAddress}</span>
                             </div>
                         </div>
                     </div>

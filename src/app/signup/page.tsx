@@ -1,7 +1,7 @@
-import { SignIn } from "@clerk/nextjs";
+import { SignUp } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 
-export default function SignInPage() {
+export default function SignUpPage() {
   return (
     <div style={{
       minHeight: '100dvh',
@@ -11,9 +11,9 @@ export default function SignInPage() {
       padding: '24px',
       background: 'var(--bg)'
     }}>
-      <SignIn 
+      <SignUp 
         routing="hash" 
-        signUpUrl="/signup" 
+        signInUrl="/signin" 
         forceRedirectUrl="/dashboard"
         appearance={{
           baseTheme: dark,

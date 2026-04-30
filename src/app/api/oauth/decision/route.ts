@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
+import { currentUser } from '@clerk/nextjs/server';
 
 export async function POST(request: Request) {
   const formData = await request.formData();
@@ -10,15 +11,16 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Missing authorization_id' }, { status: 400 });
   }
 
-  const supabase = await createClient();
-  const { data: { user }, error: userError } = await supabase.auth.getUser();
+  const user = await currentUser();
 
-  console.log('[Decision] Attempting decision for user:', user?.email || 'NOT AUTHENTICATED');
+  console.log('[Decision] Attempting decision for user:', user?.emailAddresses[0]?.emailAddress || 'NOT AUTHENTICATED');
   
   if (!user) {
     console.error('[Decision] No active session found');
     return NextResponse.json({ error: 'Unauthorized. Please sign in.' }, { status: 401 });
   }
+
+  const supabase = await createClient();
 
   // Handle Mock/Test flow for frontend verification
   if (authorizationId === 'test' || authorizationId === 'preview') {

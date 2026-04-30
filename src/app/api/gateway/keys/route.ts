@@ -1,38 +1,21 @@
-import { createClient } from '@/lib/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { createGatewayKey, fetchStatsByEmail } from '@/lib/gateway';
-import { createServerClient } from '@supabase/ssr';
+import { auth, currentUser } from '@clerk/nextjs/server';
 
 export async function POST(req: NextRequest) {
-    let user;
-    const authHeader = req.headers.get('Authorization');
+    const { userId } = await auth();
+    const user = await currentUser();
 
-    if (authHeader?.startsWith('Bearer ')) {
-        const token = authHeader.substring(7);
-        const supabase = createServerClient(
-            process.env.NEXT_PUBLIC_SUPABASE_URL!,
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-            {
-                cookies: {
-                    getAll: () => [],
-                    setAll: () => {},
-                },
-            }
-        );
-        const { data: { user: u } } = await supabase.auth.getUser(token);
-        user = u;
-    } else {
-        const supabase = await createClient();
-        const { data: { user: u } } = await supabase.auth.getUser();
-        user = u;
+    if (!userId || !user?.emailAddresses[0]?.emailAddress) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    if (!user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const userEmail = user.emailAddresses[0].emailAddress;
 
     const sessionUser = {
-        email: user.email,
-        name: user.user_metadata?.full_name || user.user_metadata?.name || user.email.split('@')[0],
+        email: userEmail,
+        name: `${user.firstName || ''} ${user.lastName || ''}`.trim() || userEmail.split('@')[0],
     };
 
     const body = await req.json().catch(() => ({}));
@@ -68,7 +51,7 @@ export async function POST(req: NextRequest) {
             email,
             name: sessionUser.name?.split(' ')[0] || undefined,
             lastName: sessionUser.name?.split(' ').slice(1).join(' ') || undefined,
-            username: user.user_metadata?.user_name || undefined,
+            username: user.username || undefined,
             ...body,
         });
 

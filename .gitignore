@@ -43,3 +43,6 @@ next-env.d.ts
 # development
 /dev/
 models_status.json
+
+# clerk configuration (can include secrets)
+/.clerk/

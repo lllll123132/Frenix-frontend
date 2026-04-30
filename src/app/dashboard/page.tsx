@@ -7,6 +7,7 @@ import { GatewayStats } from '@/lib/gateway';
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
+import { useUser } from '@clerk/nextjs';
 import { cn } from '@/lib/utils';
 import {
     Activity,
@@ -127,7 +128,7 @@ function DashboardSkeleton() {
 
 export default function Dashboard() {
     const router = useRouter();
-    const [user, setUser] = useState<any>(null);
+    const { user, isLoaded, isSignedIn } = useUser();
     const [stats, setStats] = useState<GatewayStats | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -135,8 +136,6 @@ export default function Dashboard() {
     const [creatingKey, setCreatingKey] = useState(false);
     const [copied, setCopied] = useState(false);
     const [isDecrypted, setIsDecrypted] = useState(false);
-
-    const supabase = createClient();
 
     const loadData = useCallback(async () => {
         try {
@@ -174,10 +173,13 @@ export default function Dashboard() {
         if (!currUser || creatingKey) return;
         setCreatingKey(true);
         try {
+            const userEmail = currUser.emailAddresses[0]?.emailAddress;
+            if (!userEmail) throw new Error('User email not found');
+
             const res = await fetch('/api/gateway/keys', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: currUser.email })
+                body: JSON.stringify({ email: userEmail })
             });
             if (res.ok) {
                 toast.success('Gateway identity provisioned');
@@ -199,14 +201,14 @@ export default function Dashboard() {
     };
 
     useEffect(() => {
-        const init = async () => {
-            const { data: { user: u } } = await supabase.auth.getUser();
-            if (!u) { router.push('/signin'); return; }
-            setUser(u);
-            await loadData();
-        };
-        init();
-    }, [loadData, router, supabase.auth]);
+        if (isLoaded) {
+            if (!isSignedIn) {
+                router.push('/signin');
+            } else {
+                loadData();
+            }
+        }
+    }, [isLoaded, isSignedIn, loadData, router]);
 
     useEffect(() => {
         if (noKey && user) handleAutoCreateKey(user);

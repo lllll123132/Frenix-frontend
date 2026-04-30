@@ -2,6 +2,8 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
+import { useClerk, UserProfile } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -32,7 +34,7 @@ const MENU_ITEMS = {
         { icon: "solar:card-line-duotone", label: "Billing", href: "/billing" },
     ],
     profile: [
-        { icon: "solar:user-circle-line-duotone", label: "Account Portal", href: "/account" },
+        { icon: "solar:user-circle-line-duotone", label: "Account Portal", action: "profile" },
         { icon: "solar:bell-line-duotone", label: "Notifications", href: "#" }
     ],
     account: [
@@ -47,20 +49,25 @@ export const UserDropdown = ({
     user: any;
     onSignOut?: () => void;
 }) => {
+    const { openUserProfile } = useClerk();
     const router = useRouter();
     const [selectedStatus, setSelectedStatus] = React.useState("online");
+    const [showProfile, setShowProfile] = React.useState(false);
 
     const userData = {
-        name: user?.user_metadata?.full_name || user?.email?.split('@')[0] || "User",
-        username: user?.email || "@frenix_user",
-        avatar: user?.user_metadata?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.email}`,
-        initials: (user?.user_metadata?.full_name?.[0] || user?.email?.[0] || "U").toUpperCase(),
+        name: user?.fullName || user?.emailAddresses?.[0]?.emailAddress?.split('@')[0] || "User",
+        username: user?.username || user?.emailAddresses?.[0]?.emailAddress || "@frenix_user",
+        avatar: user?.imageUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.id}`,
+        initials: (user?.firstName?.[0] || user?.lastName?.[0] || user?.emailAddresses?.[0]?.emailAddress?.[0] || "U").toUpperCase(),
         status: selectedStatus
     };
 
     const handleAction = (href?: string, action?: string) => {
+        console.log('Action triggered:', action, href);
         if (action === 'logout') {
             onSignOut?.();
+        } else if (action === 'profile') {
+            setShowProfile(true);
         } else if (href) {
             router.push(href);
         }
@@ -177,6 +184,39 @@ export const UserDropdown = ({
                     ))}
                 </DropdownMenuGroup>
             </DropdownMenuContent>
+
+            {/* Custom Clerk Profile Modal */}
+            {showProfile && (
+                <div 
+                    className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-md p-4 animate-in fade-in duration-300"
+                    onClick={() => setShowProfile(false)}
+                >
+                    <div 
+                        className="relative w-full max-w-5xl max-h-[90vh] overflow-hidden rounded-xl shadow-2xl bg-[#111111] animate-in zoom-in-95 duration-300"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* Close Button */}
+                        <button 
+                            onClick={() => setShowProfile(false)}
+                            className="absolute top-6 right-6 z-[100] size-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
+                        >
+                            <Icon icon="solar:close-circle-line-duotone" className="size-5" />
+                        </button>
+                        
+                        <div className="w-full h-full overflow-y-auto no-scrollbar">
+                            <UserProfile 
+                                appearance={{
+                                    baseTheme: dark,
+                                    elements: {
+                                        rootBox: "w-full h-full",
+                                        card: "shadow-none border-none w-full max-w-full rounded-none",
+                                    }
+                                }}
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
         </DropdownMenu>
     );
 };

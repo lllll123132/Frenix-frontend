@@ -6,6 +6,8 @@ import { Button, buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { MenuToggleIcon } from '@/components/ui/menu-toggle-icon';
 import { useScroll } from '@/components/ui/use-scroll';
+import { useUser, useClerk, UserProfile } from '@clerk/nextjs';
+import { dark } from "@clerk/themes";
 import { UserDropdown } from '@/components/ui/user-dropdown';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -18,20 +20,22 @@ export interface HeaderLink {
 
 export interface HeaderProps {
     links?: HeaderLink[];
-    user?: any;
     onSignOut?: () => void;
 }
 
-export function Header({ links, user, onSignOut }: HeaderProps) {
+export function Header({ links, onSignOut }: HeaderProps) {
     const [open, setOpen] = React.useState(false);
     const scrolled = useScroll(10);
     const pathname = usePathname();
+    const [showProfile, setShowProfile] = React.useState(false);
+    const { user: clerkUser, isSignedIn, isLoaded } = useUser();
+    const { signOut, openUserProfile, redirectToSignIn } = useClerk();
 
-    const userData = user ? {
-        name: user?.user_metadata?.full_name || user?.email?.split('@')[0] || "User",
-        username: user?.email || "@frenix_user",
-        avatar: user?.user_metadata?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.email}`,
-        initials: (user?.user_metadata?.full_name?.[0] || user?.email?.[0] || "U").toUpperCase(),
+    const userData = clerkUser ? {
+        name: `${clerkUser.firstName || ''} ${clerkUser.lastName || ''}`.trim() || clerkUser.emailAddresses[0]?.emailAddress?.split('@')[0] || "User",
+        username: clerkUser.username || clerkUser.emailAddresses[0]?.emailAddress || "@frenix_user",
+        avatar: clerkUser.imageUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${clerkUser.id}`,
+        initials: (clerkUser.firstName?.[0] || clerkUser.lastName?.[0] || "U").toUpperCase(),
     } : null;
 
     const defaultLinks: HeaderLink[] = [
@@ -124,12 +128,13 @@ export function Header({ links, user, onSignOut }: HeaderProps) {
                         </Link>
                     </div>
                     <div className="mx-1.5 h-4 w-px bg-border/60" />
-                    {user ? (
-                        <UserDropdown user={user} onSignOut={onSignOut} />
+                    {isSignedIn ? (
+                        <UserDropdown 
+                          user={clerkUser} 
+                          onSignOut={() => signOut()} 
+                        />
                     ) : (
-                        <Link href="/signin">
-                            <Button size="sm" className="text-xs h-8 px-3 ml-1">Get Started</Button>
-                        </Link>
+                        <Button size="sm" className="text-xs h-8 px-3 ml-1" onClick={() => redirectToSignIn()}>Get Started</Button>
                     )}
                 </div>
                 <Button size="icon" variant="ghost" onClick={() => setOpen(!open)} className="md:hidden h-9 w-9 -mr-2">
@@ -195,48 +200,90 @@ export function Header({ links, user, onSignOut }: HeaderProps) {
                         })}
                     </div>
 
-                    {user && (
+                    {isSignedIn && (
                         <div className="space-y-1">
                             <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 mb-3 px-4">Workspace</p>
                             {[
                                 { icon: 'solar:widget-line-duotone', label: 'Dashboard', href: '/dashboard' },
                                 { icon: 'solar:key-line-duotone', label: 'API Keys', href: '/api-keys' },
                                 { icon: 'solar:card-line-duotone', label: 'Billing', href: '/billing' },
-                                { icon: 'solar:user-circle-line-duotone', label: 'Account', href: '/account' },
-                            ].map((item) => (
-                                <Link
-                                    key={item.label}
-                                    href={item.href}
-                                    onClick={() => setOpen(false)}
-                                    className={cn(
-                                        'flex items-center gap-3 rounded-xl px-4 py-3 text-[15px] font-bold transition-all',
-                                        pathname === item.href ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:bg-white/5 hover:text-foreground',
-                                    )}
-                                >
-                                    <Icon icon={item.icon} className="size-5 opacity-60" />
-                                    {item.label}
-                                </Link>
-                            ))}
+                                { icon: 'solar:user-circle-line-duotone', label: 'Account', action: () => {
+                                    setShowProfile(true);
+                                }},
+                            ].map((item) => {
+                                const isLink = 'href' in item;
+                                const Component = isLink ? Link : 'button';
+                                const props = isLink ? { href: item.href } : { onClick: () => { setOpen(false); item.action(); } };
+
+                                return (
+                                    <Component
+                                        key={item.label}
+                                        {...props}
+                                        className={cn(
+                                            'flex w-full items-center gap-3 rounded-xl px-4 py-3 text-[15px] font-bold transition-all',
+                                            isLink && pathname === item.href ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:bg-white/5 hover:text-foreground',
+                                        )}
+                                    >
+                                        <Icon icon={item.icon} className="size-5 opacity-60" />
+                                        {item.label}
+                                    </Component>
+                                );
+                            })}
                         </div>
                     )}
 
                     <div className="mt-4 pt-6 border-t border-white/5 flex flex-col gap-3">
-                        {user ? (
+                        {isSignedIn ? (
                             <Button
                                 variant="destructive"
                                 className="w-full h-12 rounded-xl font-bold bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 border-none"
-                                onClick={() => { setOpen(false); onSignOut?.(); }}
+                                onClick={() => { setOpen(false); signOut(); }}
                             >
                                 <Icon icon="solar:logout-2-bold-duotone" className="mr-2 size-5" /> Sign Out
                             </Button>
                         ) : (
-                            <Link href="/signin" onClick={() => setOpen(false)}>
-                                <Button className="w-full h-12 rounded-xl font-bold bg-primary text-primary-foreground hover:opacity-90">Get Started</Button>
-                            </Link>
+                            <Button 
+                                className="w-full h-12 rounded-xl font-bold bg-primary text-primary-foreground hover:opacity-90"
+                                onClick={() => { setOpen(false); redirectToSignIn(); }}
+                            >
+                                Get Started
+                            </Button>
                         )}
                     </div>
                 </div>
             </div>
+
+            {/* Mobile/Global Clerk Profile Modal */}
+            {showProfile && (
+                <div 
+                    className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/60 backdrop-blur-md p-4 animate-in fade-in duration-300"
+                    onClick={() => setShowProfile(false)}
+                >
+                    <div 
+                        className="relative w-full max-w-5xl max-h-[90vh] overflow-hidden rounded-xl shadow-2xl bg-[#111111] animate-in zoom-in-95 duration-300"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <button 
+                            onClick={() => setShowProfile(false)}
+                            className="absolute top-6 right-6 z-[100] size-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
+                        >
+                            <Icon icon="solar:close-circle-line-duotone" className="size-5" />
+                        </button>
+                        
+                        <div className="w-full h-full overflow-y-auto no-scrollbar">
+                            <UserProfile 
+                                appearance={{
+                                    baseTheme: dark,
+                                    elements: {
+                                        rootBox: "w-full h-full",
+                                        card: "shadow-none border-none w-full max-w-full rounded-none",
+                                    }
+                                }}
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
         </header>
     );
 }
