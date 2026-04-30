@@ -206,35 +206,20 @@ export function Header({ links, onSignOut }: HeaderProps) {
                                 { icon: 'solar:key-line-duotone', label: 'API Keys', href: '/api-keys' },
                                 { icon: 'solar:card-line-duotone', label: 'Billing', href: '/billing' },
                                 { icon: 'solar:user-circle-line-duotone', label: 'Account', href: '/user-profile' },
-                            ].map((item) => {
-                                if ('href' in item && item.href) {
-                                    return (
-                                        <Link
-                                            key={item.label}
-                                            href={item.href}
-                                            onClick={() => setOpen(false)}
-                                            className={cn(
-                                                'flex w-full items-center gap-3 rounded-xl px-4 py-3 text-[15px] font-bold transition-all',
-                                                pathname === item.href ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:bg-white/5 hover:text-foreground',
-                                            )}
-                                        >
-                                            <Icon icon={item.icon} className="size-5 opacity-60" />
-                                            {item.label}
-                                        </Link>
-                                    );
-                                }
-
-                                return (
-                                    <button
-                                        key={item.label}
-                                        onClick={() => { setOpen(false); item.action?.(); }}
-                                        className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-[15px] font-bold transition-all text-muted-foreground hover:bg-white/5 hover:text-foreground"
-                                    >
-                                        <Icon icon={item.icon} className="size-5 opacity-60" />
-                                        {item.label}
-                                    </button>
-                                );
-                            })}
+                            ].map((item) => (
+                                <Link
+                                    key={item.label}
+                                    href={item.href}
+                                    onClick={() => setOpen(false)}
+                                    className={cn(
+                                        'flex w-full items-center gap-3 rounded-xl px-4 py-3 text-[15px] font-bold transition-all',
+                                        pathname === item.href ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:bg-white/5 hover:text-foreground',
+                                    )}
+                                >
+                                    <Icon icon={item.icon} className="size-5 opacity-60" />
+                                    {item.label}
+                                </Link>
+                            ))}
                         </div>
                     )}
 
