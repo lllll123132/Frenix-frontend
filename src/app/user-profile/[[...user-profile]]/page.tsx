@@ -3,7 +3,10 @@ import { dark } from "@clerk/themes";
 
 export default function UserProfilePage() {
   return (
-    <div className="min-h-screen bg-black pt-24 pb-12 px-4 flex justify-center">
+    <div 
+      className="min-h-screen pt-24 pb-12 px-4 flex justify-center"
+      style={{ background: '#0a0a0a' }}
+    >
       <div className="w-full max-w-6xl">
         <UserProfile 
           path="/user-profile" 
@@ -22,7 +25,7 @@ export default function UserProfilePage() {
             },
             elements: {
               rootBox: "w-full shadow-2xl border border-white/5 rounded-2xl overflow-hidden mx-auto",
-              card: "shadow-none border-none w-full",
+              card: "shadow-none border-none w-full bg-[#0a0a0a]",
               navbar: "border-r border-white/5 bg-transparent",
               headerTitle: "text-2xl font-black tracking-tight",
               profileSectionTitleText: "text-lg font-bold",
@@ -30,6 +33,9 @@ export default function UserProfilePage() {
               formFieldInput: "border-white/10 focus:border-white/20 transition-all",
               footer: "hidden", // Clean up the footer
               breadcrumbs: "hidden", // Remove breadcrumbs
+              pageScrollBox: "bg-[#0a0a0a]",
+              page: "bg-[#0a0a0a]",
+              profilePage: "bg-[#0a0a0a]",
             }
           }}
         />
