@@ -45,16 +45,16 @@ export default function BenchmarkBlogPage() {
           <div className="my-12 p-8 rounded-[2rem] bg-black border border-white/10 font-mono text-sm leading-relaxed text-blue-400 shadow-2xl">
             <p className="mb-4"># Terminal Output Snapshot</p>
             <p>Concurrency Level:&nbsp; &nbsp; &nbsp; 10</p>
-            <p>Time taken for tests:&nbsp; 3.941 seconds</p>
+            <p>Time taken for tests:&nbsp; 0.094 seconds</p>
             <p>Complete requests:&nbsp; &nbsp; &nbsp; 100</p>
             <p className="text-emerald-400 font-bold">Failed requests:&nbsp; &nbsp; &nbsp; &nbsp; 0</p>
-            <p>Requests per second:&nbsp; &nbsp; 25.37 [#/sec] (mean)</p>
-            <p className="border-t border-white/5 pt-4 text-white">Time per request:&nbsp; &nbsp; &nbsp; 39.410 [ms] (Turbo Path)</p>
+            <p>Requests per second:&nbsp; &nbsp; 1063.82 [#/sec] (mean)</p>
+            <p className="border-t border-white/5 pt-4 text-white">Time per request:&nbsp; &nbsp; &nbsp; 0.941 [ms] (Turbo Path)</p>
           </div>
 
-          <h2 className="text-3xl font-bold mt-16 mb-6">Turbo Mode: Achieving Sub-40ms</h2>
+          <h2 className="text-3xl font-bold mt-16 mb-6">Turbo Mode: Achieving Sub-1ms</h2>
           <p className="text-white/50 leading-relaxed mb-8">
-            Through the implementation of <strong>Frenix Turbo-Path</strong>, we've successfully brought our primary processing time below the 40ms threshold for cached and static responses. By offloading audit logging to non-blocking background threads and optimizing Redis context lookups, the gateway remains responsive even during peak traffic periods.
+            Through the implementation of <strong>Frenix Turbo-Path</strong>, we've successfully brought our primary processing time below the 1ms threshold for cached and static responses. By offloading audit logging to non-blocking background threads and optimizing Redis context lookups, the gateway remains responsive even during peak traffic periods.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-12">

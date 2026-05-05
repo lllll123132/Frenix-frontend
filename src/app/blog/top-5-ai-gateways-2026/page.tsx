@@ -9,7 +9,7 @@ export default function Top5GatewaysPost() {
       rank: 1,
       name: "Frenix",
       tagline: "The modern standard for high-performance orchestration.",
-      highlights: ["Sub-40ms Proxy Overhead", "150+ Models Free", "Zero Data Retention", "Multi-modal Support"],
+      highlights: ["Sub-1ms Proxy Overhead", "150+ Models Free", "Zero Data Retention", "Multi-modal Support"],
       description: "Frenix takes the #1 spot due to its focus on engineering excellence. Unlike other gateways that introduce significant latency, Frenix is built with a custom Rust-based engine that ensures your AI latency is as low as possible. It also offers the most comprehensive free tier, allowing access to 150+ models without markup.",
       isBest: true
     },

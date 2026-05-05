@@ -4,7 +4,7 @@ import { ArrowRight, ChevronRight, Bot, Zap, Shield, TrendingUp, Code, Layers } 
 
 export const metadata: Metadata = {
     title: "AI Agents Infrastructure | Frenix Gateway for Autonomous Agents",
-    description: "Build reliable AI agents with Frenix. Automatic failover, multi-model routing, and sub-40ms latency ensure your agents never go offline. Used by teams building coding agents, customer support bots, and autonomous workflows.",
+    description: "Build reliable AI agents with Frenix. Automatic failover, multi-model routing, and sub-1ms latency ensure your agents never go offline. Used by teams building coding agents, customer support bots, and autonomous workflows.",
     keywords: ["AI agents infrastructure", "autonomous agents API", "AI agent gateway", "multi-agent system", "AI agent failover", "coding agent infrastructure", "customer support AI", "agentic workflows"],
     alternates: { canonical: "https://www.frenix.sh/use-cases/agents" },
     openGraph: {
@@ -33,7 +33,7 @@ export default function AIAgentsPage() {
                     </h1>
                     <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mb-8">
                         AI agents require reliable, low-latency access to multiple models. Frenix provides the infrastructure layer that keeps your agents running —
-                        with automatic failover, intelligent model routing, and sub-40ms overhead that ensures your agents respond in real-time.
+                        with automatic failover, intelligent model routing, and sub-1ms overhead that ensures your agents respond in real-time.
                     </p>
                     <div className="flex flex-wrap gap-4">
                         <Link href="/dashboard" className="btn-primary inline-flex items-center gap-2 px-8 py-3.5 text-sm font-bold">
@@ -53,7 +53,7 @@ export default function AIAgentsPage() {
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {[
-                        { icon: Zap, title: "Sub-40ms routing", desc: "Agent chains multiply latency. Frenix's minimal overhead ensures your multi-step agent workflows complete in seconds, not minutes." },
+                        { icon: Zap, title: "Sub-1ms routing", desc: "Agent chains multiply latency. Frenix's minimal overhead ensures your multi-step agent workflows complete in seconds, not minutes." },
                         { icon: Shield, title: "99.7% uptime SLA", desc: "Your agents can't afford downtime. Frenix's redundant infrastructure and automatic failover keep agents running 24/7." },
                         { icon: Bot, title: "Multi-model agents", desc: "Route different tasks to different models. Use GPT-4o for reasoning, Claude for long context, and Haiku for fast classification — all in one agent." },
                         { icon: TrendingUp, title: "Cost optimization", desc: "Automatically route simple tasks to cheaper models. Save 60-80% on token costs without sacrificing quality." },

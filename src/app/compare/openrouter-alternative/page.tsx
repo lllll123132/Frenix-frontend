@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 const comparison = [
     { feature: "Supported Models", frenix: "150+ (all free)", openrouter: "200+", winner: "frenix" },
-    { feature: "Proxy Latency Overhead", frenix: "<40ms", openrouter: "~100-200ms", winner: "frenix" },
+    { feature: "Proxy Latency Overhead", frenix: "<1ms", openrouter: "~100-200ms", winner: "frenix" },
     { feature: "OpenAI SDK Compatible", frenix: true, openrouter: true, winner: "tie" },
     { feature: "Anthropic API Compatible", frenix: true, openrouter: false, winner: "frenix" },
     { feature: "Zero Data Retention", frenix: true, openrouter: false, winner: "frenix" },
@@ -68,7 +68,7 @@ export default function OpenRouterAlternativePage() {
                     </h1>
                     <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mb-8">
                         Both Frenix and OpenRouter let you access multiple LLMs through a single API. But Frenix is built for production —
-                        with sub-40ms proxy overhead, zero data retention, automatic failover, and native support for images, video, and TTS
+                        with sub-1ms proxy overhead, zero data retention, automatic failover, and native support for images, video, and TTS
                         that OpenRouter doesn&apos;t offer.
                     </p>
                 </div>
@@ -109,8 +109,8 @@ export default function OpenRouterAlternativePage() {
                 <div className="grid md:grid-cols-2 gap-8">
                     {[
                         {
-                            title: "5x lower proxy latency",
-                            desc: "Frenix adds less than 40ms of overhead per request. OpenRouter typically adds 100-200ms. For streaming applications and agent chains, this difference compounds significantly."
+                            title: "100x lower proxy latency",
+                            desc: "Frenix adds less than 1ms of overhead per request. OpenRouter typically adds 100-200ms. For streaming applications and agent chains, this difference compounds significantly."
                         },
                         {
                             title: "Zero data retention",

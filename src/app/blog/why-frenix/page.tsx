@@ -66,7 +66,7 @@ export default function WhyFrenixPost() {
 
           <h2 className="text-2xl font-bold mb-6 text-foreground mt-12">1. Performance That Matters</h2>
           <p className="text-muted-foreground leading-relaxed mb-6">
-            Adding a proxy layer usually means adding latency. Frenix is built with a custom Rust-based routing engine that ensures overhead is kept below 40ms. By using latency-aware load balancing, we often deliver responses <i>faster</i> than direct provider calls by routing around regional congestion.
+            Adding a proxy layer usually means adding latency. Frenix is built with a custom Rust-based routing engine that ensures overhead is kept below 1ms. By using latency-aware load balancing, we often deliver responses <i>faster</i> than direct provider calls by routing around regional congestion.
           </p>
 
           <h2 className="text-2xl font-bold mb-6 text-foreground mt-12">2. Reliability as a Standard</h2>

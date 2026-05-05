@@ -4,7 +4,7 @@ import { ArrowRight, Zap, Shield, Globe, Server, BarChart3, Lock, Code, Terminal
 
 export const metadata: Metadata = {
     title: "AI Gateway | Unified API for 150+ LLMs — Frenix",
-    description: "Frenix AI Gateway provides a single, secure API endpoint to access OpenAI, Anthropic Claude, Google Gemini, and 150+ large language models. Dynamic routing, automatic failover, sub-40ms overhead.",
+    description: "Frenix AI Gateway provides a single, secure API endpoint to access OpenAI, Anthropic Claude, Google Gemini, and 150+ large language models. Dynamic routing, automatic failover, sub-1ms overhead.",
     keywords: ["AI gateway", "LLM gateway", "unified AI API", "AI proxy", "LLM proxy", "AI infrastructure", "model routing", "AI orchestration", "OpenAI proxy", "Claude proxy", "Gemini proxy"],
     alternates: { canonical: "https://www.frenix.sh/ai-gateway" },
     openGraph: {
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 };
 
 const features = [
-    { icon: Zap, title: "Sub-40ms Overhead", description: "Latency-aware load balancing routes every request to the fastest available upstream provider in real time." },
+    { icon: Zap, title: "Sub-1ms Overhead", description: "Latency-aware load balancing routes every request to the fastest available upstream provider in real time." },
     { icon: Shield, title: "Zero-Retention Security", description: "Your prompts and completions are never stored. TLS-encrypted tunnels proxy directly to upstream providers." },
     { icon: Globe, title: "Global Edge Network", description: "Deployed across multiple regions for consistently low latency regardless of your users' locations." },
     { icon: Server, title: "Automatic Failover", description: "If a provider goes down, Frenix instantly reroutes to a comparable model — zero downtime for your users." },
@@ -83,7 +83,7 @@ export default function AIGatewayPage() {
                                 failover, response normalization, and observability so your application code stays clean and provider-agnostic.
                             </p>
                             <p>
-                                Frenix is the fastest AI gateway available, adding less than 40ms of overhead per request while providing access to
+                                Frenix is the fastest AI gateway available, adding less than 1ms of overhead per request while providing access to
                                 150+ models across all major providers through a single OpenAI-compatible API endpoint.
                             </p>
                         </div>
@@ -195,7 +195,7 @@ export default function AIGatewayPage() {
                         },
                         {
                             q: "What latency does the gateway add?",
-                            a: "Frenix adds less than 40ms of overhead per request on average. Our edge network and optimized proxy layer ensure that the gateway is nearly invisible in terms of latency impact, especially for streaming requests."
+                            a: "Frenix adds less than 1ms of overhead per request on average. Our edge network and optimized proxy layer ensure that the gateway is nearly invisible in terms of latency impact, especially for streaming requests."
                         },
                         {
                             q: "Can I use Frenix in production?",

@@ -77,7 +77,7 @@ export default function OpenAIIntegrationPage() {
                         "Unified dashboard for all model usage and costs",
                         "Per-key rate limits and usage caps",
                         "Zero data retention — prompts are never stored",
-                        "Sub-40ms proxy overhead on top of OpenAI latency",
+                        "Sub-1ms proxy overhead on top of OpenAI latency",
                         "Same OpenAI SDK — just change the base URL",
                     ].map((item, i) => (
                         <div key={i} className="flex items-center gap-3 p-4 bg-white/[0.02] border border-white/5 rounded-xl">

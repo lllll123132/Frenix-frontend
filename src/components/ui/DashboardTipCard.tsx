@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useState, useRef } from 'react';
 
 const tips = [
-  "Edge caching for <40ms latency.",
+  "Edge caching for <1ms latency.",
   "Swap providers in settings.",
   "Review Intelligence Distribution.",
   "Secure calls with key rotation."

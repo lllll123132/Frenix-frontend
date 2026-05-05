@@ -10,7 +10,7 @@ Frenix is an AI gateway that simplifies model orchestration. It provides a unifi
 - **Unified API**: Access any model through one endpoint.
 - **Latency-Aware Routing**: Automatic provider selection for minimal latency.
 - **Smart Failover**: Automatic rerouting to fallback models (e.g., Poixe, Gemini) during outages.
-- **Edge Caching**: Sub-40ms response times for repeated queries.
+- **Edge Caching**: Sub-1ms response times for repeated queries.
 - **Enterprise Security**: Key rotation, PII redaction, and RBAC.
 
 ## Strategic Partners

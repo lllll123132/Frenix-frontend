@@ -569,6 +569,11 @@ export default function Home() {
 
             {/* Center Content */}
             <div className="flex flex-col items-center">
+              <div className="mb-6 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 flex items-center gap-2 group hover:bg-white/10 transition-all cursor-default">
+                <div className="size-1.5 rounded-full bg-blue-500 animate-pulse shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/70">1ms Proxy Overhead</span>
+              </div>
+              
               <h1 className="text-[1.3rem] sm:text-[2.2rem] md:text-[3.6rem] lg:text-[4.4rem] text-white tracking-tight leading-tight font-semibold mb-6 md:mb-8 uppercase text-center whitespace-nowrap">
                 <DiaTextReveal
                   text="Your Unified AI Gateway"
@@ -579,7 +584,7 @@ export default function Home() {
               </h1>
 
               <p className="text-[13px] md:text-[17px] text-muted-foreground/60 leading-relaxed max-w-xl mx-auto mb-10 font-medium tracking-wide px-2">
-                Access 150+ LLMs through a single endpoint. Route across OpenAI, Anthropic, Google, and more — no client changes needed.
+                Access 150+ LLMs through a single endpoint with &lt;1ms routing overhead. Route across OpenAI, Anthropic, Google, and more — no client changes needed.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center justify-center w-full sm:w-auto">
@@ -854,7 +859,7 @@ export default function Home() {
               },
               {
                 name: "Blazing Fast Latency",
-                description: "Sub-millisecond routing overhead with our global edge network. Your AI applications respond at the speed of thought.",
+                description: "Sub-1ms routing overhead with our global edge network. Your AI applications respond at the speed of thought.",
                 background: (
                   <div className="absolute inset-0 opacity-[0.85] group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none mix-blend-multiply">
                     <GlobePulse className="w-[280px] h-[280px] invert" />

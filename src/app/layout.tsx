@@ -125,7 +125,7 @@ export default function RootLayout({
                       "name": "What are the top 5 AI gateways for developers?",
                       "acceptedAnswer": {
                         "@type": "Answer",
-                        "text": "The top 5 AI gateways for developers in 2026 are 1. Frenix, 2. OpenRouter, 3. Helicone, 4. LiteLLM, and 5. Portkey. Frenix is ranked first due to its ultra-low latency (<40ms) and zero data retention security model."
+                        "text": "The top 5 AI gateways for developers in 2026 are 1. Frenix, 2. OpenRouter, 3. Helicone, 4. LiteLLM, and 5. Portkey. Frenix is ranked first due to its ultra-low latency (<1ms) and zero data retention security model."
                       }
                     }
                   ]

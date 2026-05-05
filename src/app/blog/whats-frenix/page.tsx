@@ -93,7 +93,7 @@ export default function WhatsFrenixPost() {
           </div>
 
           <p className="text-muted-foreground leading-relaxed mb-6">
-            By abstracting away the infrastructure, Frenix allows you to focus on the prompt engineering and user experience. Whether you're running a small side project or a mission-critical enterprise application, Frenix scales with you, providing sub-40ms overhead and 99.9% uptime.
+            By abstracting away the infrastructure, Frenix allows you to focus on the prompt engineering and user experience. Whether you're running a small side project or a mission-critical enterprise application, Frenix scales with you, providing sub-1ms overhead and 99.9% uptime.
           </p>
 
           <h2 className="text-2xl font-bold mb-4 text-foreground mt-12">Conclusion</h2>

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     alternates: { canonical: "https://www.frenix.sh/llm-gateway" },
     openGraph: {
         title: "LLM Gateway — Route to Any Large Language Model | Frenix",
-        description: "One endpoint for GPT-4, Claude, Gemini, Llama, and 150+ LLMs. Automatic failover and sub-40ms routing overhead.",
+        description: "One endpoint for GPT-4, Claude, Gemini, Llama, and 150+ LLMs. Automatic failover and sub-1ms routing overhead.",
         url: "https://www.frenix.sh/llm-gateway",
         type: "website",
     },

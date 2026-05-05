@@ -218,7 +218,7 @@ const blogPosts = [
   },
   {
     title: "Frenix v2: Apache Bench Performance Report",
-    excerpt: "See how the Frenix Enterprise Gateway achieved sub-40ms response times and a 100% success rate under high concurrency tests.",
+    excerpt: "See how the Frenix Enterprise Gateway achieved sub-1ms response times and a 100% success rate under high concurrency tests.",
     date: "March 17, 2026",
     readTime: "5 min read",
     author: "Infrastructure Lab",

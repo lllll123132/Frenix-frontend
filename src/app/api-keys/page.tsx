@@ -1,6 +1,6 @@
 'use client'
 
-import { createClient } from '@/lib/supabase/client';
+import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -70,23 +70,19 @@ function CopyBtn({ text }: { text: string }) {
 }
 
 export default function ApiKeys() {
+    const { user, isLoaded, isSignedIn } = useUser();
     const router = useRouter();
-    const [user, setUser] = useState<any>(null);
     const [status, setStatus] = useState<'loading' | 'authenticated'>('loading');
-    const supabase = createClient();
 
     useEffect(() => {
-        const checkUser = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) {
+        if (isLoaded) {
+            if (!isSignedIn) {
                 router.push('/signin');
-                return;
+            } else {
+                setStatus('authenticated');
             }
-            setUser(user);
-            setStatus('authenticated');
-        };
-        checkUser();
-    }, []);
+        }
+    }, [isLoaded, isSignedIn]);
 
     const [key, setKey] = useState<StoredKey | null>(null);
     const [creating, setCreating] = useState(false);
@@ -102,12 +98,12 @@ export default function ApiKeys() {
                 const createRes = await fetch('/api/gateway/keys', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) });
                 const data = await createRes.json();
                 if (createRes.ok) {
-                    setKey({ plainKey: data.key, keyPrefix: data.key.substring(0, 20), tier: data.tier, email: data.email || user?.email || '', status: data.status || 'active', createdNow: true });
+                    setKey({ plainKey: data.key, keyPrefix: data.key.substring(0, 20), tier: data.tier, email: data.email || user?.primaryEmailAddress?.emailAddress || '', status: data.status || 'active', createdNow: true });
                     setHasKey(true);
                     toast.success('Your API Key has been generated automatically!');
                 } else if (createRes.status === 409) {
                     setHasKey(true);
-                    setKey({ plainKey: '', keyPrefix: data.keyPrefix || '', tier: data.tier || 'free', email: data.email || user?.email || '', status: data.status || 'active', createdNow: false });
+                    setKey({ plainKey: '', keyPrefix: data.keyPrefix || '', tier: data.tier || 'free', email: data.email || user?.primaryEmailAddress?.emailAddress || '', status: data.status || 'active', createdNow: false });
                 } else {
                     setError(data.error || 'Failed to create key');
                     setHasKey(false);
@@ -149,7 +145,7 @@ export default function ApiKeys() {
                 toast.error(msg);
                 return;
             }
-            setKey({ plainKey: data.key, keyPrefix: data.key.substring(0, 20), tier: data.tier, email: data.email || user?.email || '', status: data.status || 'active', createdNow: true });
+            setKey({ plainKey: data.key, keyPrefix: data.key.substring(0, 20), tier: data.tier, email: data.email || user?.primaryEmailAddress?.emailAddress || '', status: data.status || 'active', createdNow: true });
             setHasKey(true);
             toast.success('Your API Key has been generated successfully!');
         } catch {
@@ -161,7 +157,7 @@ export default function ApiKeys() {
         }
     };
 
-    if (status === 'loading' || hasKey === null || (creating && !key)) {
+    if (!isLoaded || status === 'loading' || hasKey === null || (creating && !key)) {
         return <ApiKeysSkeleton />;
     }
 
